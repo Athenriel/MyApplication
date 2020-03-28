@@ -1,4 +1,5 @@
 .DS_Store
+desktop.ini
 *.apk
 *.ap_
 *.dex
@@ -12,6 +13,7 @@ ajcore*
 .cxx
 .prev
 
+app/build/
 /build
 bin/
 gen/
