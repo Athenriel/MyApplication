@@ -16,9 +16,18 @@ Learn the basics with this simple App:
 
 Git Cheatsheet
 
+Pull from master
+1. git fetch
+2. git rebase master
+
 Create new branch
 1. git checkout -b branch_name
 2. git push -u origin branch_name
+
+Commit and push
+1. git add .
+2. git commit -m "message"
+3. git push origin branch_name
 
 Uncommit
 - git reset --soft "HEAD^"
@@ -32,7 +41,7 @@ Rebase from master and push to branch, if there are no conflicts, skip steps 2 a
 1. git rebase master
 2. {solve conflicts} git add .
 3. git rebase --continue
-4. git push -from
+4. git push -f
 
 Squash commits into 1 commit, N is number of commits
 1. git rebase -i HEAD~N
