@@ -24,7 +24,7 @@ class DeviceIdUpdateWorker(ctx: Context, params: WorkerParameters) : CoroutineWo
                 .build()
             val workBuilder =
                 OneTimeWorkRequestBuilder<DeviceIdUpdateWorker>().setConstraints(constraints)
-                    .setBackoffCriteria(BackoffPolicy.LINEAR, 1, TimeUnit.MINUTES)
+                    .setBackoffCriteria(BackoffPolicy.LINEAR, 5, TimeUnit.MINUTES)
             workManager.enqueueUniqueWork(
                 DeviceIdUpdateWorker::class.java.simpleName,
                 ExistingWorkPolicy.REPLACE, workBuilder.build()

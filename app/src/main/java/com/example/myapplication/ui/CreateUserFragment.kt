@@ -88,7 +88,7 @@ class CreateUserFragment : Fragment() {
             val body = safeContext.getString(R.string.create_user_success)
             val ringNotificationSound =
                 RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-            val vibration = arrayOf(1000L, 1000L, 1500L)
+            val vibration = arrayOf(100L, 400L, 300L, 700L)
             val intent = Intent(safeContext, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             intent.putExtra(MainActivity.VIEW_USERS_EXTRA, true)

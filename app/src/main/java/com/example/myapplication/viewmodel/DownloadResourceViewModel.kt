@@ -1,14 +1,14 @@
 package com.example.myapplication.viewmodel
 
 import android.content.Context
-import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.myapplication.datasource.remote.RemoteDataSource
 import com.example.myapplication.datasource.Resource
+import com.example.myapplication.datasource.remote.RemoteDataSource
 import com.example.myapplication.datasource.remote.ResourceError
 import com.example.myapplication.datasource.remote.RetrofitFactory
 import com.example.myapplication.datasource.remote.model.ProgressDownloadModel
+import com.example.myapplication.datasource.remote.model.ResourceDownloadedModel
 import com.example.myapplication.utils.Utils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +23,7 @@ class DownloadResourceViewModel(private val remoteDataSource: RemoteDataSource) 
     fun downloadResource(
         url: String, context: Context?,
         progressLiveData: MutableLiveData<ProgressDownloadModel>,
-        uriLiveData: MutableLiveData<Resource<Uri?, ResourceError>>
+        uriLiveData: MutableLiveData<Resource<ResourceDownloadedModel, ResourceError>>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -36,24 +36,37 @@ class DownloadResourceViewModel(private val remoteDataSource: RemoteDataSource) 
                         Utils.saveResourceToShareFolder(context, response.body(), id, type)
                     withContext(Dispatchers.Main) {
                         uri?.let {
-                            uriLiveData.postValue(Resource.success(uri))
+                            uriLiveData.postValue(
+                                Resource.success(
+                                    ResourceDownloadedModel(
+                                        id,
+                                        uri
+                                    )
+                                )
+                            )
                         } ?: run {
                             uriLiveData.postValue(
                                 Resource.error(
-                                    ResourceError.UNKNOWN, null))
+                                    ResourceError.UNKNOWN, ResourceDownloadedModel(null, null)
+                                )
+                            )
                         }
                     }
                 } else {
                     uriLiveData.postValue(
                         Resource.error(
-                            ResourceError.UNKNOWN, null))
+                            ResourceError.UNKNOWN, ResourceDownloadedModel(null, null)
+                        )
+                    )
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     e.printStackTrace()
                     uriLiveData.postValue(
                         Resource.error(
-                            ResourceError.NETWORK, null))
+                            ResourceError.NETWORK, ResourceDownloadedModel(null, null)
+                        )
+                    )
                 }
             }
         }
