@@ -18,7 +18,7 @@ Git Cheatsheet
 
 Pull from master
 1. git fetch
-2. git rebase master
+2. git pull origin master
 
 Create new branch
 1. git checkout -b branch_name
