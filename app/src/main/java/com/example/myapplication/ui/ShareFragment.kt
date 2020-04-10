@@ -1,5 +1,7 @@
 package com.example.myapplication.ui
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,12 +12,15 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import com.bumptech.glide.Glide
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentShareBinding
 import com.example.myapplication.datasource.Resource
 import com.example.myapplication.datasource.remote.ResourceError
 import com.example.myapplication.datasource.remote.model.ProgressDownloadModel
 import com.example.myapplication.datasource.remote.model.ResourceDownloadedModel
+import com.example.myapplication.ui.dialog.BottomDialogListener
+import com.example.myapplication.ui.dialog.DarkBottomDialogFragment
 import com.example.myapplication.utils.Utils
 import com.example.myapplication.viewmodel.DownloadResourceViewModel
 import org.koin.android.ext.android.inject
@@ -29,6 +34,11 @@ class ShareFragment : Fragment() {
     private var _binding: FragmentShareBinding? = null
     private val binding get() = _binding!!
     private val downloadResourceViewModel: DownloadResourceViewModel by inject()
+    private var uri: Uri? = null
+
+    companion object {
+        private const val SHARE_CODE = 2112
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,6 +52,9 @@ class ShareFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.fragmentShareImageIv.setOnClickListener {
+            sharePhoto()
+        }
         binding.fragmentShareUrlEt.setOnEditorActionListener { _, actionId, _ ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_GO -> {
@@ -72,22 +85,15 @@ class ShareFragment : Fragment() {
                                 it.data?.resourceId,
                                 it.data?.uri
                             )
+                            Timber.d("Resource is %s", it)
                             if (it.error == null) {
                                 binding.fragmentShareResourcePb.isVisible = false
-                                it.data?.uri?.let { uriSafe ->
-                                    Utils.sharePhoto(
-                                        uriSafe,
-                                        this,
-                                        2112,
-                                        object : Utils.ShareException {
-                                            override fun noAppFoundException() {
-                                                val title = getString(R.string.error_title)
-                                                val text =
-                                                    getString(R.string.error_share_image_activity_resolve)
-                                                Utils.showSimpleDialog(context, title, text)
-                                            }
-                                        })
-                                }
+                                uri = it.data?.uri
+                                Glide.with(binding.fragmentShareImageIv)
+                                    .load(uri)
+                                    .fitCenter()
+                                    .centerCrop()
+                                    .into(binding.fragmentShareImageIv)
                             } else {
                                 val title = getString(R.string.error_title)
                                 val text = getString(R.string.error_downloading_resource)
@@ -105,6 +111,43 @@ class ShareFragment : Fragment() {
                 }
                 else -> false
             }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == SHARE_CODE) {
+            val dialog = DarkBottomDialogFragment.newInstance(
+                getString(R.string.image_shared_text),
+                uri?.lastPathSegment
+            )
+            dialog.bottomDialogListener = object : BottomDialogListener {
+                override fun onDismiss() {
+                    Glide.with(binding.fragmentShareImageIv).clear(binding.fragmentShareImageIv)
+                    uri = null
+                }
+            }
+            dialog.show(
+                childFragmentManager,
+                DarkBottomDialogFragment::class.simpleName
+            )
+        }
+    }
+
+    private fun sharePhoto() {
+        uri?.let { uriSafe ->
+            Utils.sharePhoto(
+                uriSafe,
+                this,
+                SHARE_CODE,
+                object : Utils.ShareException {
+                    override fun noAppFoundException() {
+                        val title = getString(R.string.error_title)
+                        val text =
+                            getString(R.string.error_share_image_activity_resolve)
+                        Utils.showSimpleDialog(context, title, text)
+                    }
+                })
         }
     }
 

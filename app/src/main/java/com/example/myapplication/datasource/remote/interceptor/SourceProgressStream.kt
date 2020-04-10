@@ -13,9 +13,11 @@ import kotlin.math.roundToInt
  * A one-shot stream from the origin server to the client application with the raw bytes of the
  * response body. Each response body shows the progress of each request
  */
-class SourceProgressStream(private val responseBody: ResponseBody?,
-                           private val progressListener: MutableLiveData<ProgressDownloadModel>?,
-                           private val resourceId: String?) : ResponseBody() {
+class SourceProgressStream(
+    private val responseBody: ResponseBody?,
+    private val progressListener: MutableLiveData<ProgressDownloadModel>?,
+    private val resourceId: String?
+) : ResponseBody() {
 
     private var bufferedSource: BufferedSource? = null
 

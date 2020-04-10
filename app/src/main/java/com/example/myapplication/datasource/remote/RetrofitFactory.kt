@@ -47,8 +47,10 @@ object RetrofitFactory {
         return builder.build()
     }
 
-    fun createRetrofitAndInterceptorModel(progressLiveData: MutableLiveData<ProgressDownloadModel>?,
-                                          resourceId: String?): RetrofitAndInterceptorModel {
+    fun createRetrofitAndInterceptorModel(
+        progressLiveData: MutableLiveData<ProgressDownloadModel>?,
+        resourceId: String?
+    ): RetrofitAndInterceptorModel {
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.HEADERS
         val downloadInterceptor = DownloadProgressInterceptor(progressLiveData, resourceId)

@@ -65,7 +65,7 @@ class UserViewModel(private val localDataSource: LocalDataSource) : ViewModel() 
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     e.printStackTrace()
-                    data.postValue(Resource.error(PersistanceError.UNKNOWN, false))
+                    data.postValue(Resource.error(PersistanceError.UNKNOWN, e.message))
                 }
             }
         }
@@ -83,7 +83,7 @@ class UserViewModel(private val localDataSource: LocalDataSource) : ViewModel() 
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     e.printStackTrace()
-                    data.postValue(Resource.error(PersistanceError.UNKNOWN, false))
+                    data.postValue(Resource.error(PersistanceError.UNKNOWN, e.message))
                 }
             }
         }

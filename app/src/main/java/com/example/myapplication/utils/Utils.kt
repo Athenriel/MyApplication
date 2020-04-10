@@ -38,6 +38,7 @@ fun <T1 : Any, T2 : Any, T3 : Any, R : Any> safeLet(
 object Utils {
     private const val SHARE_FOLDER = "share"
     private const val AUTHORITY = "com.example.myapplication.provider"
+    private const val RESOURCE_PREFIX = "resource_"
 
     interface ShareException {
         fun noAppFoundException()
@@ -53,13 +54,36 @@ object Utils {
         }
     }
 
+    fun fileExists(context: Context?, resourceId: String, type: String): Uri? {
+        context?.let { contextSafe ->
+            contextSafe.getExternalFilesDir(SHARE_FOLDER)?.let { shareFolder ->
+                val name = RESOURCE_PREFIX + resourceId + type
+                val file = File(shareFolder, name)
+                return if (file.exists() && file.length() > 0) {
+                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                        FileProvider.getUriForFile(
+                            contextSafe,
+                            AUTHORITY,
+                            file
+                        )
+                    } else {
+                        Uri.fromFile(file)
+                    }
+                } else {
+                    null
+                }
+            }
+        }
+        return null
+    }
+
     fun saveResourceToShareFolder(
         context: Context?, response: ResponseBody?,
         resourceId: String?, type: String
     ): Uri? {
         context?.let { safeContext ->
             safeContext.getExternalFilesDir(SHARE_FOLDER)?.let { shareFolder ->
-                val name = "resource_" + resourceId + type
+                val name = RESOURCE_PREFIX + resourceId + type
                 val target = File(shareFolder, name)
                 var sink: BufferedSink? = null
                 try {
