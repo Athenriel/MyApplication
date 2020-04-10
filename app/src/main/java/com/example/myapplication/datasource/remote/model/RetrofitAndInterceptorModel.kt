@@ -6,4 +6,7 @@ import retrofit2.Retrofit
 /**
  * Created by Athenriel on 25/03/2020.
  */
-data class RetrofitAndInterceptorModel(val retrofit: Retrofit, val downloadProgressInterceptor: DownloadProgressInterceptor)
+data class RetrofitAndInterceptorModel(
+    val retrofit: Retrofit,
+    val downloadProgressInterceptor: DownloadProgressInterceptor
+)

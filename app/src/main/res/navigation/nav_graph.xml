@@ -15,25 +15,25 @@
             app:destination="@id/CreateUserFragment"
             app:enterAnim="@anim/slide_up"
             app:exitAnim="@anim/slide_down"
-            app:popExitAnim="@anim/slide_down"/>
+            app:popExitAnim="@anim/slide_down" />
         <action
             android:id="@+id/action_UsersHomeFragment_to_ViewUsersFragment"
             app:destination="@id/ViewUsersFragment"
             app:enterAnim="@anim/slide_up"
             app:exitAnim="@anim/slide_down"
-            app:popExitAnim="@anim/slide_down"/>
+            app:popExitAnim="@anim/slide_down" />
         <action
             android:id="@+id/action_UsersHomeFragment_to_ShareFragment"
             app:destination="@+id/ShareFragment"
             app:enterAnim="@anim/slide_up"
             app:exitAnim="@anim/slide_down"
-            app:popExitAnim="@anim/slide_down"/>
+            app:popExitAnim="@anim/slide_down" />
     </fragment>
     <fragment
         android:id="@+id/CreateUserFragment"
         android:name="com.example.myapplication.ui.CreateUserFragment"
         android:label="@string/create_user_title"
-        tools:layout="@layout/fragment_create_user"/>
+        tools:layout="@layout/fragment_create_user" />
     <fragment
         android:id="@+id/ViewUsersFragment"
         android:name="com.example.myapplication.ui.ViewUsersFragment"
@@ -48,6 +48,6 @@
         android:id="@+id/ShareFragment"
         android:name="com.example.myapplication.ui.ShareFragment"
         android:label="@string/share_title"
-        tools:layout="@layout/fragment_share"/>
+        tools:layout="@layout/fragment_share" />
 
 </navigation>

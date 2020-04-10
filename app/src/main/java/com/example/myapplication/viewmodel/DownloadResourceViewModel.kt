@@ -29,42 +29,55 @@ class DownloadResourceViewModel(private val remoteDataSource: RemoteDataSource) 
             try {
                 val type = "." + url.substringAfterLast(".")
                 val id = url.substringAfterLast("/").substringBeforeLast(".")
-                val model = RetrofitFactory.createRetrofitAndInterceptorModel(progressLiveData, id)
-                val response = remoteDataSource.getResource(url, model)
-                if (response.isSuccessful) {
-                    val uri =
-                        Utils.saveResourceToShareFolder(context, response.body(), id, type)
-                    withContext(Dispatchers.Main) {
-                        uri?.let {
-                            uriLiveData.postValue(
-                                Resource.success(
-                                    ResourceDownloadedModel(
-                                        id,
-                                        uri
-                                    )
-                                )
-                            )
-                        } ?: run {
-                            uriLiveData.postValue(
-                                Resource.error(
-                                    ResourceError.UNKNOWN, ResourceDownloadedModel(null, null)
-                                )
-                            )
-                        }
-                    }
-                } else {
+                val savedFileUri = Utils.fileExists(context, id, type)
+                if (savedFileUri != null) {
                     uriLiveData.postValue(
-                        Resource.error(
-                            ResourceError.UNKNOWN, ResourceDownloadedModel(null, null)
+                        Resource.success(
+                            ResourceDownloadedModel(
+                                id,
+                                savedFileUri
+                            )
                         )
                     )
+                } else {
+                    val model =
+                        RetrofitFactory.createRetrofitAndInterceptorModel(progressLiveData, id)
+                    val response = remoteDataSource.getResource(url, model)
+                    if (response.isSuccessful) {
+                        val uri =
+                            Utils.saveResourceToShareFolder(context, response.body(), id, type)
+                        withContext(Dispatchers.Main) {
+                            uri?.let {
+                                uriLiveData.postValue(
+                                    Resource.success(
+                                        ResourceDownloadedModel(
+                                            id,
+                                            uri
+                                        )
+                                    )
+                                )
+                            } ?: run {
+                                uriLiveData.postValue(
+                                    Resource.error(
+                                        ResourceError.UNKNOWN, null
+                                    )
+                                )
+                            }
+                        }
+                    } else {
+                        uriLiveData.postValue(
+                            Resource.error(
+                                ResourceError.UNKNOWN, "Response unsuccessful"
+                            )
+                        )
+                    }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     e.printStackTrace()
                     uriLiveData.postValue(
                         Resource.error(
-                            ResourceError.NETWORK, ResourceDownloadedModel(null, null)
+                            ResourceError.NETWORK, e.message
                         )
                     )
                 }

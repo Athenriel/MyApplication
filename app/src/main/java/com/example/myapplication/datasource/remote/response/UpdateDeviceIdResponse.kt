@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 /**
  * Created by Athenriel on 27/03/2020.
  */
-data class UpdateDeviceIdResponse (
+data class UpdateDeviceIdResponse(
     @SerializedName("updated")
     @Expose
     val updated: Boolean

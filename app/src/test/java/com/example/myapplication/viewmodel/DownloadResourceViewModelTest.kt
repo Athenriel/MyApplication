@@ -73,7 +73,24 @@ class DownloadResourceViewModelTest {
             )
         } returns retrofitAndInterceptorModelMock
         coEvery { remoteDataSourceMock.getResource(any(), any()) } returns response
+        coEvery { Utils.fileExists(any(), any(), any()) } returns null
         coEvery { Utils.saveResourceToShareFolder(any(), any(), any(), any()) } returns uriMock
+        downloadResourceViewModel.downloadResource(url, contextMock, progressLiveData, uriLiveData)
+        uriLiveData.test().awaitValue().assertHasValue()
+            .assertValue { it.data?.resourceId == resourceId && it.data?.uri == uriMock }
+    }
+
+    @Test
+    fun downloadResourceFileExistsSuccess() {
+        val url = "https://developer.android.com/images/android-developers.png"
+        val resourceId = "android-developers"
+        val progressLiveData: MutableLiveData<ProgressDownloadModel> = MutableLiveData()
+        val uriLiveData: MutableLiveData<Resource<ResourceDownloadedModel, ResourceError>> =
+            MutableLiveData()
+        val contextMock = mockk<Context>()
+        mockkObject(Utils)
+        val uriMock = mockk<Uri>()
+        coEvery { Utils.fileExists(any(), any(), any()) } returns uriMock
         downloadResourceViewModel.downloadResource(url, contextMock, progressLiveData, uriLiveData)
         uriLiveData.test().awaitValue().assertHasValue()
             .assertValue { it.data?.resourceId == resourceId && it.data?.uri == uriMock }
@@ -98,6 +115,7 @@ class DownloadResourceViewModelTest {
             )
         } returns retrofitAndInterceptorModelMock
         coEvery { remoteDataSourceMock.getResource(any(), any()) } returns response
+        coEvery { Utils.fileExists(any(), any(), any()) } returns null
         coEvery { Utils.saveResourceToShareFolder(any(), any(), any(), any()) } returns null
         downloadResourceViewModel.downloadResource(url, contextMock, progressLiveData, uriLiveData)
         uriLiveData.test().awaitValue().assertHasValue()
@@ -153,6 +171,7 @@ class DownloadResourceViewModelTest {
                 any()
             )
         } returns retrofitAndInterceptorModelMock
+        coEvery { Utils.fileExists(any(), any(), any()) } returns null
         coEvery { remoteDataSourceMock.getResource(any(), any()) } returns response
         downloadResourceViewModel.downloadResource(url, contextMock, progressLiveData, uriLiveData)
         uriLiveData.test().awaitValue().assertHasValue()
