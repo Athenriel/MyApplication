@@ -1,5 +1,6 @@
 package com.example.myapplication.ui
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -37,6 +38,7 @@ class ShareFragment : Fragment() {
     private var uri: Uri? = null
 
     companion object {
+        private const val PICK_CODE = 117
         private const val SHARE_CODE = 2112
     }
 
@@ -54,6 +56,13 @@ class ShareFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.fragmentShareImageIv.setOnClickListener {
             sharePhoto()
+        }
+        binding.fragmentSharePickBtn.setOnClickListener {
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                addCategory(Intent.CATEGORY_OPENABLE)
+                type = "image/*"
+            }
+            startActivityForResult(intent, PICK_CODE)
         }
         binding.fragmentShareUrlEt.setOnEditorActionListener { _, actionId, _ ->
             return@setOnEditorActionListener when (actionId) {
@@ -131,6 +140,9 @@ class ShareFragment : Fragment() {
                 childFragmentManager,
                 DarkBottomDialogFragment::class.simpleName
             )
+        } else if (requestCode == PICK_CODE && resultCode == Activity.RESULT_OK) {
+            uri = Utils.transferFileFromProvider(context, data?.data)
+            sharePhoto()
         }
     }
 

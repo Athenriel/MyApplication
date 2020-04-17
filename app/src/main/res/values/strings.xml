@@ -7,9 +7,8 @@
     <string name="content_description_remove_button">Delete Item</string>
     <string name="content_description_share_image">Share Image</string>
     <string name="content_description_success_image">Success</string>
-    <string name="users_home_title">Hello World!</string>
+    <string name="splash_title">Splash</string>
     <string name="create_user_btn">Create User</string>
-    <string name="view_users_btn">View Users</string>
     <string name="create_user_title">Create User</string>
     <string name="first_name_text">First Name</string>
     <string name="last_name_text">Last Name</string>
@@ -21,6 +20,7 @@
     <string name="view_users_title">View Users</string>
     <string name="share_title">Share</string>
     <string name="share_btn">Share</string>
+    <string name="pick_file_btn">Pick</string>
     <string name="image_shared_text">Image Shared</string>
     <string name="share_url_empty_toast">Image Url is empty</string>
     <string name="image_url_hint">Image Url</string>
