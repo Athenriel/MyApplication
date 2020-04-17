@@ -3,28 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/UsersHomeFragment">
+    app:startDestination="@id/SplashFragment">
 
     <fragment
-        android:id="@+id/UsersHomeFragment"
-        android:name="com.example.myapplication.ui.UsersHomeFragment"
-        android:label="@string/users_home_title"
-        tools:layout="@layout/fragment_users_home">
+        android:id="@+id/SplashFragment"
+        android:name="com.example.myapplication.ui.SplashFragment"
+        android:label="@string/splash_title"
+        tools:layout="@layout/fragment_splash">
         <action
-            android:id="@+id/action_UsersHomeFragment_to_CreateUserFragment"
+            android:id="@+id/action_SplashFragment_to_CreateUserFragment"
             app:destination="@id/CreateUserFragment"
             app:enterAnim="@anim/slide_up"
             app:exitAnim="@anim/slide_down"
             app:popExitAnim="@anim/slide_down" />
         <action
-            android:id="@+id/action_UsersHomeFragment_to_ViewUsersFragment"
+            android:id="@+id/action_SplashFragment_to_ViewUsersFragment"
             app:destination="@id/ViewUsersFragment"
-            app:enterAnim="@anim/slide_up"
-            app:exitAnim="@anim/slide_down"
-            app:popExitAnim="@anim/slide_down" />
-        <action
-            android:id="@+id/action_UsersHomeFragment_to_ShareFragment"
-            app:destination="@+id/ShareFragment"
             app:enterAnim="@anim/slide_up"
             app:exitAnim="@anim/slide_down"
             app:popExitAnim="@anim/slide_down" />

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_create_user_nav"
+        android:icon="@android:drawable/ic_dialog_dialer"
+        android:title="@string/create_user_title" />
+
+    <item
+        android:id="@+id/menu_view_user_nav"
+        android:icon="@android:drawable/ic_dialog_info"
+        android:title="@string/view_users_title" />
+
+    <item
+        android:id="@+id/menu_share_nav"
+        android:icon="@android:drawable/ic_dialog_map"
+        android:title="@string/share_title" />
+
+</menu>

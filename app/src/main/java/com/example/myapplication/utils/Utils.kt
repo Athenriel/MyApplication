@@ -6,6 +6,7 @@ import android.content.*
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
+import android.provider.OpenableColumns
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
@@ -18,6 +19,7 @@ import okio.BufferedSink
 import okio.buffer
 import okio.sink
 import java.io.File
+import java.io.FileInputStream
 
 /**
  * Created by Athenriel on 25/03/2020.
@@ -112,6 +114,38 @@ object Utils {
             }
         }
         return null
+    }
+
+    fun transferFileFromProvider(context: Context?, uriOrigin: Uri?): Uri? {
+        var uri: Uri? = null
+        try {
+            safeLet(context, uriOrigin) { safeContext, safeUri ->
+                safeContext.getExternalFilesDir(SHARE_FOLDER)?.let { folder ->
+                    var name = ""
+                    safeContext.contentResolver.query(safeUri, null, null, null, null)?.use {
+                        if (it.moveToFirst()) {
+                            name = it.getString(it.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                        }
+                    }
+                    if (name.isNotBlank()) {
+                        safeContext.contentResolver.openFileDescriptor(safeUri, "r", null)
+                            ?.let { fileDescriptor ->
+                                val target =
+                                    File(folder, "share_image_" + name)
+                                FileInputStream(fileDescriptor.fileDescriptor).copyTo(target.outputStream())
+                                uri = FileProvider.getUriForFile(
+                                    safeContext,
+                                    AUTHORITY,
+                                    target
+                                )
+                            }
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return uri
     }
 
     fun getFileUriFromPathTransferIfNeeded(context: Context?, filePath: String?): Uri? {
