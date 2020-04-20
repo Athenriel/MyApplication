@@ -150,6 +150,7 @@ class ShareFragment : Fragment() {
         uri?.let { uriSafe ->
             Utils.sharePhoto(
                 uriSafe,
+                getString(R.string.share_image_text),
                 this,
                 SHARE_CODE,
                 object : Utils.ShareException {
