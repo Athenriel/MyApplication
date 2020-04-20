@@ -13,7 +13,12 @@
 
     <item
         android:id="@+id/menu_share_nav"
-        android:icon="@android:drawable/ic_dialog_map"
+        android:icon="@android:drawable/ic_media_next"
         android:title="@string/share_title" />
+
+    <item
+        android:id="@+id/menu_location_nav"
+        android:icon="@android:drawable/ic_dialog_map"
+        android:title="@string/location_title" />
 
 </menu>

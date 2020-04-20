@@ -2,7 +2,9 @@ package com.example.myapplication.datasource.remote
 
 import com.example.myapplication.datasource.remote.model.RetrofitAndInterceptorModel
 import com.example.myapplication.datasource.remote.request.UpdateDeviceIdRequest
+import com.example.myapplication.datasource.remote.request.UpdateLocationRequest
 import com.example.myapplication.datasource.remote.response.UpdateDeviceIdResponse
+import com.example.myapplication.datasource.remote.response.UpdateLocationResponse
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -24,6 +26,14 @@ class RemoteDataSource {
         return retrofitAuth.create(ProfileClient::class.java).updateDeviceId(request)
     }
 
+    suspend fun sendLocationToServer(
+        latitude: Double,
+        longitude: Double
+    ): Response<UpdateLocationResponse> {
+        val request = UpdateLocationRequest(latitude, longitude)
+        return retrofitAuth.create(ProfileClient::class.java).updateLocation(request)
+    }
+
     suspend fun getResource(
         url: String,
         retrofitAndInterceptorModel: RetrofitAndInterceptorModel
@@ -41,6 +51,10 @@ interface ProfileClient {
     @Headers("Content-Type:application/zip")
     @POST("profile/deviceId")
     suspend fun updateDeviceId(@Body request: UpdateDeviceIdRequest): Response<UpdateDeviceIdResponse>
+
+    @Headers("Content-Type:application/zip")
+    @POST("profile/location")
+    suspend fun updateLocation(@Body request: UpdateLocationRequest): Response<UpdateLocationResponse>
 
 }
 

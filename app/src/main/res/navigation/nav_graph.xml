@@ -43,5 +43,10 @@
         android:name="com.example.myapplication.ui.ShareFragment"
         android:label="@string/share_title"
         tools:layout="@layout/fragment_share" />
+    <fragment
+        android:id="@+id/LocationFragment"
+        android:name="com.example.myapplication.ui.LocationFragment"
+        android:label="@string/location_title"
+        tools:layout="@layout/fragment_location" />
 
 </navigation>

@@ -200,6 +200,7 @@ object Utils {
 
     fun sharePhoto(
         photoUri: Uri,
+        title: String,
         fragment: Fragment,
         requestCode: Int,
         shareException: ShareException?
@@ -213,7 +214,30 @@ object Utils {
             PackageManager.MATCH_DEFAULT_ONLY
         )
         if (!list.isNullOrEmpty()) {
-            fragment.startActivityForResult(intent, requestCode)
+            fragment.startActivityForResult(Intent.createChooser(intent, title), requestCode)
+        } else {
+            shareException?.noAppFoundException()
+        }
+    }
+
+    fun shareLocation(
+        latitude: Double,
+        longitude: Double,
+        title: String,
+        fragment: Fragment,
+        requestCode: Int,
+        shareException: ShareException?
+    ) {
+        val text = "https://maps.google.com/maps?q=loc:$latitude,$longitude"
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.type = "text/plain"
+        intent.putExtra(Intent.EXTRA_TEXT, text)
+        val list = fragment.context?.packageManager?.queryIntentActivities(
+            intent,
+            PackageManager.MATCH_DEFAULT_ONLY
+        )
+        if (!list.isNullOrEmpty()) {
+            fragment.startActivityForResult(Intent.createChooser(intent, title), requestCode)
         } else {
             shareException?.noAppFoundException()
         }
