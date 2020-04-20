@@ -1,10 +1,11 @@
 # MyApplication
-Example using Kotlin, Model-View-ViewModel, AndroidX, Coroutines, Fused Location, LiveData, Navigation, View Binding, Bottom Navigation, Koin, Room, WorkManager, Retrofit and Unit Tests with Mockk
+Example using Kotlin, Model-View-ViewModel, AndroidX, Constraint Layout, Coroutines, Fused Location, LiveData, Navigation, View Binding, Bottom Navigation, Koin, Room, WorkManager, Retrofit and Unit Tests with Mockk
 
 What is:
 - **Kotlin** New supported language, very readable, very concise, interoperable, null safety, more info [here](https://developer.android.com/kotlin)
-- **MVVM** Model-View-ViewModel, solid architectural pattern, using android's [View Models](https://developer.android.com/topic/libraries/architecture/viewmodel)
+- **MVVM** Model-View-ViewModel, solid architectural pattern, using android's [View Models](https://developer.android.com/topic/libraries/architecture/viewmodel) clearly separates view, business logic and data sources
 - **AndroidX** Compatibility and recommended code solutions, more info [here](https://developer.android.com/jetpack/androidx)
+- **Constraint Layout** allows a layout to adjust to different screen sizes and avoids view annidation, more info [here](https://developer.android.com/training/constraint-layout)
 - **Coroutines** safe threading, managed by view models, more info [here](https://developer.android.com/kotlin/coroutines)
 - **Fused Location** receive location updates from available sources, more info [here](https://developers.google.com/location-context/fused-location-provider)
 - **LiveData** observable data source, respond to changes and events, lifecycle aware, more info [here](https://developer.android.com/topic/libraries/architecture/livedata)
@@ -17,6 +18,11 @@ What is:
 - **Retrofit** type safe HTTP calls, more info [here](https://square.github.io/retrofit/)
 - **Unit Tests** ensure correct code logic and error handling, more info [here](https://developer.android.com/training/testing/unit-testing)
 - **Mockk** allows the creation of "mock" instances of objects to ease unit testing, more info [here](https://mockk.io/)
+- **Shared Preferences** allows storage of simple data, more info [here](https://developer.android.com/guide/topics/data/data-storage#pref)
+- **Recycler View** a more efficient List View, more info [here](https://developer.android.com/guide/topics/ui/layout/recyclerview)
+- **Sharesheet** share simple data with other apps, more info [here](https://developer.android.com/training/sharing/send)
+- **Firebase Instance Id** When using Firebase, server can send a notification to a specific user with this id, more info [here](https://firebase.google.com/docs/cloud-messaging)
+- **Clean Architecture** ensure modularization, scalability and testability, more info [here](https://fernandocejas.com/2018/05/07/architecting-android-reloaded/)
 
 Learn the basics with this simple App:
 - Create and store User with Room
