@@ -8,6 +8,8 @@ Learn the basics with this simple App:
 - View users in a Recycler View with a Click Listener to delete the user from Room
 - Download an image file from a valid url with Retrofit, monitor the download % and then save the file in a predefined folder to share with Intent Action Send
 - Pick one image and copy file to app designated folder and share it
+- Use Fused Location Client to get the user location and update server
+- Share location with Intent Action Send
 - Get the Firebase Instance Id device token and send it to your server using a retrying worker
 - Coroutine Worker as well as Coroutines implemented in the Local and Remote Data Sources
 - View Binding and Navigation from Android Jetpack
