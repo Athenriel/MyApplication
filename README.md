@@ -1,5 +1,22 @@
 # MyApplication
-Example using Kotlin, Model-View-ViewModel, Coroutines, LiveData, Navigation, View Binding, Bottom Navigation, Koin, Room, WorkManager, Retrofit and Unit Tests with Mockk
+Example using Kotlin, Model-View-ViewModel, AndroidX, Coroutines, Fused Location, LiveData, Navigation, View Binding, Bottom Navigation, Koin, Room, WorkManager, Retrofit and Unit Tests with Mockk
+
+What is:
+- **Kotlin** New supported language, very readable, very concise, interoperable, null safety, more info [here](https://developer.android.com/kotlin)
+- **MVVM** Model-View-ViewModel, solid architectural pattern, using android's [View Models](https://developer.android.com/topic/libraries/architecture/viewmodel)
+- **AndroidX** Compatibility and recommended code solutions, more info [here](https://developer.android.com/jetpack/androidx)
+- **Coroutines** safe threading, managed by view models, more info [here](https://developer.android.com/kotlin/coroutines)
+- **Fused Location** receive location updates from available sources, more info [here](https://developers.google.com/location-context/fused-location-provider)
+- **LiveData** observable data source, respond to changes and events, lifecycle aware, more info [here](https://developer.android.com/topic/libraries/architecture/livedata)
+- **Navigation** provides easy to use "endpoints" as fragments and safe arguments to start them, more info [here](https://developer.android.com/guide/navigation)
+- **View Binding** easy and safe interaction with views, more info [here](https://developer.android.com/topic/libraries/view-binding)
+- **Bottom Navigation** Bottom Navigation bar using Material Components, more info [here](https://material.io/develop/android/components/bottom-navigation-view/)
+- **Koin** Dependency injection, define once, use anywhere, more info [here](https://insert-koin.io/)
+- **Room** Data persistance over SQLite, more info [here](https://developer.android.com/topic/libraries/architecture/room)
+- **WorkManager** safe async deferable tasks, more info [here](https://developer.android.com/topic/libraries/architecture/workmanager)
+- **Retrofit** type safe HTTP calls, more info [here](https://square.github.io/retrofit/)
+- **Unit Tests** ensure correct code logic and error handling, more info [here](https://developer.android.com/training/testing/unit-testing)
+- **Mockk** allows the creation of "mock" instances of objects to ease unit testing, more info [here](https://mockk.io/)
 
 Learn the basics with this simple App:
 - Create and store User with Room
@@ -8,12 +25,12 @@ Learn the basics with this simple App:
 - View users in a Recycler View with a Click Listener to delete the user from Room
 - Download an image file from a valid url with Retrofit, monitor the download % and then save the file in a predefined folder to share with Intent Action Send
 - Pick one image and copy file to app designated folder and share it
-- Use Fused Location Client to get the user location and update server
+- Use Fused Location Client to get the user location and update server using a retrying worker
 - Share location with Intent Action Send
 - Get the Firebase Instance Id device token and send it to your server using a retrying worker
 - Coroutine Worker as well as Coroutines implemented in the Local and Remote Data Sources
 - View Binding and Navigation from Android Jetpack
-- Unit Tests for the View Models and the Worker using KoinTest and Mockk
+- Unit Tests for the View Models and the Workers using KoinTest and Mockk
 - Some neat utils
 - Clean Architecture
 
