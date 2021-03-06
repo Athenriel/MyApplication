@@ -15,19 +15,44 @@
             app:destination="@id/CreateUserFragment"
             app:enterAnim="@anim/slide_up"
             app:exitAnim="@anim/slide_down"
-            app:popExitAnim="@anim/slide_down" />
+            app:popExitAnim="@anim/slide_down"
+            app:popUpTo="@id/SplashFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_SplashFragment_to_ViewUsersFragment"
             app:destination="@id/ViewUsersFragment"
             app:enterAnim="@anim/slide_up"
             app:exitAnim="@anim/slide_down"
-            app:popExitAnim="@anim/slide_down" />
+            app:popExitAnim="@anim/slide_down"
+            app:popUpTo="@id/SplashFragment"
+            app:popUpToInclusive="true" />
     </fragment>
+
     <fragment
         android:id="@+id/CreateUserFragment"
         android:name="com.example.myapplication.ui.CreateUserFragment"
         android:label="@string/create_user_title"
-        tools:layout="@layout/fragment_create_user" />
+        tools:layout="@layout/fragment_create_user">
+        <action
+            android:id="@+id/action_CreateUserFragment_to_CuentaFragment"
+            app:destination="@id/CuentaFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down"
+            app:popExitAnim="@anim/slide_down" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/CuentaFragment"
+        android:name="com.example.myapplication.ui.CuentaFragment"
+        android:label="@string/create_user_title"
+        tools:layout="@layout/fragment_cuenta">
+        <argument
+            android:name="openWithUser"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+
     <fragment
         android:id="@+id/ViewUsersFragment"
         android:name="com.example.myapplication.ui.ViewUsersFragment"
@@ -38,11 +63,13 @@
             android:defaultValue="false"
             app:argType="boolean" />
     </fragment>
+
     <fragment
         android:id="@+id/ShareFragment"
         android:name="com.example.myapplication.ui.ShareFragment"
         android:label="@string/share_title"
         tools:layout="@layout/fragment_share" />
+
     <fragment
         android:id="@+id/LocationFragment"
         android:name="com.example.myapplication.ui.LocationFragment"

@@ -8,14 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.example.myapplication.R
+import com.example.myapplication.databinding.DialogBottomDarkBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.android.synthetic.main.bottom_dark_dialog.*
 
 /**
  * Created by Athenriel on 09/04/2020.
  */
 class DarkBottomDialogFragment : BottomSheetDialogFragment() {
 
+    private var _binding: DialogBottomDarkBinding? = null
+    private val binding get() = _binding!!
     var bottomDialogListener: BottomDialogListener? = null
 
     companion object {
@@ -38,21 +40,22 @@ class DarkBottomDialogFragment : BottomSheetDialogFragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.bottom_dark_dialog, container, false)
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View {
+        _binding = DialogBottomDarkBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         arguments?.let { argumentsSafe ->
             argumentsSafe.getString(TITLE_EXTRA)?.let { title ->
-                bottom_dialog_title_tv.text = title
+                binding.bottomDialogTitleTv.text = title
             }
             argumentsSafe.getString(DESCRIPTION_EXTRA)?.let { description ->
-                bottom_dialog_description_tv.text = description
+                binding.bottomDialogDescriptionTv.text = description
             }
         }
     }
@@ -60,6 +63,11 @@ class DarkBottomDialogFragment : BottomSheetDialogFragment() {
     override fun onDismiss(dialog: DialogInterface) {
         bottomDialogListener?.onDismiss()
         super.onDismiss(dialog)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }
