@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentCreateUserBinding
 import com.example.myapplication.utils.Utils
@@ -30,7 +30,7 @@ class CreateUserFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentCreateUserBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -42,7 +42,7 @@ class CreateUserFragment : Fragment() {
             val lastName = binding.fragmentCreateUserLastNameEt.text.toString().trim()
             if (checkName(firstName, true) && checkName(lastName, false)) {
                 userViewModel.createUser(firstName, lastName)
-                    .observe(viewLifecycleOwner, Observer { userCreatedResource ->
+                    .observe(viewLifecycleOwner, { userCreatedResource ->
                         if (userCreatedResource.error == null && userCreatedResource.data == true) {
                             sendSuccessNotification()
                             binding.fragmentCreateUserFirstNameEt.setText("")
@@ -54,6 +54,10 @@ class CreateUserFragment : Fragment() {
                         }
                     })
             }
+        }
+        binding.fragmentCreateUserCuentaBtn.setOnClickListener {
+            val directions = CreateUserFragmentDirections.actionCreateUserFragmentToCuentaFragment("ID3456787654")
+            findNavController().navigate(directions)
         }
     }
 

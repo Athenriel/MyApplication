@@ -12,6 +12,7 @@ import com.example.myapplication.datasource.local.LocalDataSource
 import com.example.myapplication.datasource.local.database.AppDatabase
 import com.example.myapplication.datasource.remote.RemoteDataSource
 import com.example.myapplication.model.UserLocationModel
+import com.example.myapplication.viewmodel.CuentaViewModel
 import com.example.myapplication.viewmodel.DownloadResourceViewModel
 import com.example.myapplication.viewmodel.UserViewModel
 import com.example.myapplication.worker.DeviceIdUpdateWorker
@@ -50,6 +51,7 @@ class MyApplication : Application() {
                 single { UserLocationModel(0.0, 0.0) }
                 viewModel { DownloadResourceViewModel(get()) }
                 viewModel { UserViewModel(get()) }
+                viewModel { CuentaViewModel(get()) }
             })
         }
         FirebaseApp.initializeApp(this)

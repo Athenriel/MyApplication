@@ -4,15 +4,15 @@ import android.content.Context
 import androidx.work.*
 import com.example.myapplication.datasource.local.LocalDataSource
 import com.example.myapplication.datasource.remote.RemoteDataSource
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.util.concurrent.TimeUnit
 
 /**
  * Created by Athenriel on 27/03/2020.
  */
 class DeviceIdUpdateWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, params),
-    KoinComponent {
+        KoinComponent {
 
     private val remoteDataSource: RemoteDataSource by inject()
     private val localDataSource: LocalDataSource by inject()
