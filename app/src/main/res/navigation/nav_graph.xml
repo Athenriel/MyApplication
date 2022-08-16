@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/SplashFragment"
-        android:name="com.example.myapplication.ui.SplashFragment"
+        android:name="com.example.myapplication.ui.splash.SplashFragment"
         android:label="@string/splash_title"
         tools:layout="@layout/fragment_splash">
         <action
@@ -30,7 +30,7 @@
 
     <fragment
         android:id="@+id/CreateUserFragment"
-        android:name="com.example.myapplication.ui.CreateUserFragment"
+        android:name="com.example.myapplication.ui.cuenta.CreateUserFragment"
         android:label="@string/create_user_title"
         tools:layout="@layout/fragment_create_user">
         <action
@@ -43,7 +43,7 @@
 
     <fragment
         android:id="@+id/CuentaFragment"
-        android:name="com.example.myapplication.ui.CuentaFragment"
+        android:name="com.example.myapplication.ui.cuenta.CuentaFragment"
         android:label="@string/create_user_title"
         tools:layout="@layout/fragment_cuenta">
         <argument
@@ -55,7 +55,7 @@
 
     <fragment
         android:id="@+id/ViewUsersFragment"
-        android:name="com.example.myapplication.ui.ViewUsersFragment"
+        android:name="com.example.myapplication.ui.viewuser.ViewUsersFragment"
         android:label="@string/view_users_title"
         tools:layout="@layout/fragment_view_users">
         <argument
@@ -66,13 +66,13 @@
 
     <fragment
         android:id="@+id/ShareFragment"
-        android:name="com.example.myapplication.ui.ShareFragment"
+        android:name="com.example.myapplication.ui.share.ShareFragment"
         android:label="@string/share_title"
         tools:layout="@layout/fragment_share" />
 
     <fragment
         android:id="@+id/LocationFragment"
-        android:name="com.example.myapplication.ui.LocationFragment"
+        android:name="com.example.myapplication.ui.location.LocationFragment"
         android:label="@string/location_title"
         tools:layout="@layout/fragment_location" />
 

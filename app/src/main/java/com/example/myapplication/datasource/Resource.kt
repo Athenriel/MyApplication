@@ -19,10 +19,11 @@ data class Resource<ObjType, ErrorType>(
 
         fun <ObjType, ErrorType> error(
             errorType: ErrorType,
-            errorExtra: String?
+            errorExtra: String?,
+            data: ObjType? = null
         ): Resource<ObjType, ErrorType> {
             return Resource(
-                null,
+                data,
                 errorType,
                 errorExtra
             )

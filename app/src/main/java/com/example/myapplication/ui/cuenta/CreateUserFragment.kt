@@ -1,18 +1,18 @@
-package com.example.myapplication.ui
+package com.example.myapplication.ui.cuenta
 
 import android.app.PendingIntent
 import android.content.Intent
 import android.media.RingtoneManager
+import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentCreateUserBinding
+import com.example.myapplication.ui.BaseFragment
+import com.example.myapplication.ui.MainActivity
 import com.example.myapplication.utils.Utils
 import com.example.myapplication.viewmodel.UserViewModel
 import org.koin.android.ext.android.inject
@@ -20,20 +20,10 @@ import org.koin.android.ext.android.inject
 /**
  * Created by Athenriel on 26/03/2020.
  */
-class CreateUserFragment : Fragment() {
+class CreateUserFragment :
+    BaseFragment<FragmentCreateUserBinding>(FragmentCreateUserBinding::inflate) {
 
-    private var _binding: FragmentCreateUserBinding? = null
-    private val binding get() = _binding!!
     private val userViewModel: UserViewModel by inject()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentCreateUserBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -42,7 +32,7 @@ class CreateUserFragment : Fragment() {
             val lastName = binding.fragmentCreateUserLastNameEt.text.toString().trim()
             if (checkName(firstName, true) && checkName(lastName, false)) {
                 userViewModel.createUser(firstName, lastName)
-                    .observe(viewLifecycleOwner, { userCreatedResource ->
+                    .observe(viewLifecycleOwner) { userCreatedResource ->
                         if (userCreatedResource.error == null && userCreatedResource.data == true) {
                             sendSuccessNotification()
                             binding.fragmentCreateUserFirstNameEt.setText("")
@@ -52,11 +42,12 @@ class CreateUserFragment : Fragment() {
                             val text = getString(R.string.error_creating_user)
                             Utils.showSimpleDialog(this@CreateUserFragment.context, title, text)
                         }
-                    })
+                    }
             }
         }
         binding.fragmentCreateUserCuentaBtn.setOnClickListener {
-            val directions = CreateUserFragmentDirections.actionCreateUserFragmentToCuentaFragment("ID3456787654")
+            val directions =
+                CreateUserFragmentDirections.actionCreateUserFragmentToCuentaFragment("ID3456787654")
             findNavController().navigate(directions)
         }
     }
@@ -97,7 +88,11 @@ class CreateUserFragment : Fragment() {
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             intent.putExtra(MainActivity.VIEW_USERS_EXTRA, true)
             val pendingIntent =
-                PendingIntent.getActivity(safeContext, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    PendingIntent.getActivity(safeContext, 0, intent, PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE)
+                } else {
+                    PendingIntent.getActivity(safeContext, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+                }
             val notifyBuilder = NotificationCompat.Builder(safeContext, channelId).apply {
                 setSmallIcon(R.mipmap.ic_launcher)
                 setContentTitle(title)
@@ -112,11 +107,6 @@ class CreateUserFragment : Fragment() {
                 notify(0, notifyBuilder.build())
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
 }

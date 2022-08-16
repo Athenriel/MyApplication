@@ -2,6 +2,7 @@ package com.example.myapplication.ui
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -17,6 +18,7 @@ import androidx.work.WorkManager
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityMainBinding
 import com.example.myapplication.model.UserLocationModel
+import com.example.myapplication.ui.splash.SplashFragmentDirections
 import com.example.myapplication.worker.LocationUpdateWorker
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
@@ -44,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         val navController = findNavController(R.id.nav_host_fragment)
         binding.bottomNavBar.setupWithNavController(navController)
-        binding.bottomNavBar.setOnNavigationItemSelectedListener {
+        binding.bottomNavBar.setOnItemSelectedListener {
             val clearNavOptions =
                 NavOptions.Builder().setLaunchSingleTop(true).setPopUpTo(R.id.nav_graph, true)
                     .build()
@@ -78,16 +80,31 @@ class MainActivity : AppCompatActivity() {
             }
         }
         locationLiveData = MutableLiveData()
-        Handler().postDelayed({
-            if (navController.currentDestination?.id == R.id.SplashFragment) {
-                val directions = if (intent.getBooleanExtra(VIEW_USERS_EXTRA, false)) {
-                    SplashFragmentDirections.actionSplashFragmentToViewUsersFragment(true)
-                } else {
-                    SplashFragmentDirections.actionSplashFragmentToCreateUserFragment()
-                }
-                navController.navigate(directions)
+        Looper.myLooper()?.let { looper ->
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                Handler.createAsync(looper).postDelayed({
+                    if (navController.currentDestination?.id == R.id.SplashFragment) {
+                        val directions = if (intent.getBooleanExtra(VIEW_USERS_EXTRA, false)) {
+                            SplashFragmentDirections.actionSplashFragmentToViewUsersFragment(true)
+                        } else {
+                            SplashFragmentDirections.actionSplashFragmentToCreateUserFragment()
+                        }
+                        navController.navigate(directions)
+                    }
+                }, SPLASH_TIME)
+            } else {
+                Handler().postDelayed({
+                    if (navController.currentDestination?.id == R.id.SplashFragment) {
+                        val directions = if (intent.getBooleanExtra(VIEW_USERS_EXTRA, false)) {
+                            SplashFragmentDirections.actionSplashFragmentToViewUsersFragment(true)
+                        } else {
+                            SplashFragmentDirections.actionSplashFragmentToCreateUserFragment()
+                        }
+                        navController.navigate(directions)
+                    }
+                }, SPLASH_TIME)
             }
-        }, SPLASH_TIME)
+        }
     }
 
     override fun onResume() {
@@ -113,18 +130,20 @@ class MainActivity : AppCompatActivity() {
             if (permissionGranted) {
                 fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
                 val settingsClient = LocationServices.getSettingsClient(this)
-                val locationRequest = LocationRequest()
+                val locationRequest = LocationRequest.create()
                 locationRequest.interval = LOC_INTERVAL
                 locationRequest.fastestInterval = FAST_LOC_INTERVAL
-                locationRequest.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+                locationRequest.priority = Priority.PRIORITY_BALANCED_POWER_ACCURACY
                 val settingsRequest =
                     LocationSettingsRequest.Builder().addLocationRequest(locationRequest).build()
                 settingsClient.checkLocationSettings(settingsRequest).addOnSuccessListener {
-                    fusedLocationProviderClient?.requestLocationUpdates(
-                        locationRequest,
-                        locationCallback,
-                        Looper.myLooper()
-                    )
+                    Looper.myLooper()?.let { looper ->
+                        fusedLocationProviderClient?.requestLocationUpdates(
+                            locationRequest,
+                            locationCallback,
+                            looper
+                        )
+                    }
                 }.addOnFailureListener {
                     if (it is ResolvableApiException && !asked) {
                         asked = true
@@ -144,11 +163,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val locationCallback = object : LocationCallback() {
-        override fun onLocationResult(result: LocationResult?) {
+        override fun onLocationResult(result: LocationResult) {
             super.onLocationResult(result)
-            result?.let {
-                userLocationModel.latitude = it.lastLocation.latitude
-                userLocationModel.longitude = it.lastLocation.longitude
+            result.lastLocation?.let { lastLocation ->
+                userLocationModel.latitude = lastLocation.latitude
+                userLocationModel.longitude = lastLocation.longitude
                 locationLiveData.postValue(true)
                 LocationUpdateWorker.enqueue(WorkManager.getInstance(this@MainActivity))
             }

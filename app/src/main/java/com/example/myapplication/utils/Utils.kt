@@ -124,14 +124,15 @@ object Utils {
                     var name = ""
                     safeContext.contentResolver.query(safeUri, null, null, null, null)?.use {
                         if (it.moveToFirst()) {
-                            name = it.getString(it.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                            val columnIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                            name = it.getString(columnIndex)
                         }
                     }
                     if (name.isNotBlank()) {
                         safeContext.contentResolver.openFileDescriptor(safeUri, "r", null)
                             ?.let { fileDescriptor ->
                                 val target =
-                                    File(folder, "share_image_" + name)
+                                    File(folder, "share_image_$name")
                                 FileInputStream(fileDescriptor.fileDescriptor).copyTo(target.outputStream())
                                 uri = FileProvider.getUriForFile(
                                     safeContext,
