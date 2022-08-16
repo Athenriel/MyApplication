@@ -3,6 +3,7 @@ package com.example.myapplication.viewmodel
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.myapplication.datasource.Resource
 import com.example.myapplication.datasource.remote.RemoteDataSource
 import com.example.myapplication.datasource.remote.ResourceError
@@ -25,7 +26,7 @@ class DownloadResourceViewModel(private val remoteDataSource: RemoteDataSource) 
         progressLiveData: MutableLiveData<ProgressDownloadModel>,
         uriLiveData: MutableLiveData<Resource<ResourceDownloadedModel, ResourceError>>
     ) {
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch {
             try {
                 val type = "." + url.substringAfterLast(".")
                 val id = url.substringAfterLast("/").substringBeforeLast(".")
@@ -46,23 +47,21 @@ class DownloadResourceViewModel(private val remoteDataSource: RemoteDataSource) 
                     if (response.isSuccessful) {
                         val uri =
                             Utils.saveResourceToShareFolder(context, response.body(), id, type)
-                        withContext(Dispatchers.Main) {
-                            uri?.let {
-                                uriLiveData.postValue(
-                                    Resource.success(
-                                        ResourceDownloadedModel(
-                                            id,
-                                            uri
-                                        )
+                        uri?.let {
+                            uriLiveData.postValue(
+                                Resource.success(
+                                    ResourceDownloadedModel(
+                                        id,
+                                        uri
                                     )
                                 )
-                            } ?: run {
-                                uriLiveData.postValue(
-                                    Resource.error(
-                                        ResourceError.UNKNOWN, null
-                                    )
+                            )
+                        } ?: run {
+                            uriLiveData.postValue(
+                                Resource.error(
+                                    ResourceError.UNKNOWN, null
                                 )
-                            }
+                            )
                         }
                     } else {
                         uriLiveData.postValue(

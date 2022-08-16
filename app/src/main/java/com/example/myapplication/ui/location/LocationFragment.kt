@@ -1,4 +1,4 @@
-package com.example.myapplication.ui
+package com.example.myapplication.ui.location
 
 import android.Manifest
 import android.content.Intent
@@ -7,18 +7,16 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import com.example.myapplication.BuildConfig
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentLocationBinding
 import com.example.myapplication.model.UserLocationModel
+import com.example.myapplication.ui.BaseFragment
+import com.example.myapplication.ui.MainActivity
 import com.example.myapplication.ui.dialog.DarkBottomDialogFragment
 import com.example.myapplication.utils.Utils
 import org.koin.android.ext.android.inject
@@ -26,24 +24,13 @@ import org.koin.android.ext.android.inject
 /**
  * Created by Athenriel on 20/04/2020.
  */
-class LocationFragment : Fragment() {
+class LocationFragment : BaseFragment<FragmentLocationBinding>(FragmentLocationBinding::inflate) {
 
-    private var _binding: FragmentLocationBinding? = null
-    private val binding get() = _binding!!
     private val userLocationModel: UserLocationModel by inject()
 
     companion object {
         private const val SHARE_LOCATION_CODE = 503
         private const val PERMISSION_CODE = 5421
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentLocationBinding.inflate(inflater, container, false)
-        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -64,9 +51,9 @@ class LocationFragment : Fragment() {
                     }
                 })
         }
-        (activity as MainActivity?)?.getLocationLiveData()?.observe(viewLifecycleOwner, Observer {
+        (activity as MainActivity?)?.getLocationLiveData()?.observe(viewLifecycleOwner) {
             setCoordsText()
-        })
+        }
         setCoordsText()
         askPermission()
     }
@@ -115,6 +102,7 @@ class LocationFragment : Fragment() {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == SHARE_LOCATION_CODE) {
@@ -128,11 +116,5 @@ class LocationFragment : Fragment() {
             )
         }
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
 
 }

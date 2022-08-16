@@ -1,18 +1,14 @@
-package com.example.myapplication.ui
+package com.example.myapplication.ui.share
 
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentShareBinding
@@ -20,6 +16,7 @@ import com.example.myapplication.datasource.Resource
 import com.example.myapplication.datasource.remote.ResourceError
 import com.example.myapplication.datasource.remote.model.ProgressDownloadModel
 import com.example.myapplication.datasource.remote.model.ResourceDownloadedModel
+import com.example.myapplication.ui.BaseFragment
 import com.example.myapplication.ui.dialog.BottomDialogListener
 import com.example.myapplication.ui.dialog.DarkBottomDialogFragment
 import com.example.myapplication.utils.Utils
@@ -30,30 +27,21 @@ import timber.log.Timber
 /**
  * Created by Athenriel on 26/03/2020.
  */
-class ShareFragment : Fragment() {
+class ShareFragment : BaseFragment<FragmentShareBinding>(FragmentShareBinding::inflate) {
 
-    private var _binding: FragmentShareBinding? = null
-    private val binding get() = _binding!!
     private val downloadResourceViewModel: DownloadResourceViewModel by inject()
     private var uri: Uri? = null
 
     companion object {
         private const val PICK_CODE = 117
         private const val SHARE_CODE = 2112
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentShareBinding.inflate(inflater, container, false)
-        Utils.eraseShareFiles(context)
-        return binding.root
+        private const val TEST_IMAGE_URL =
+            "https://developer.android.com/images/android-developers.png"
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Utils.eraseShareFiles(context)
         binding.fragmentShareImageIv.setOnClickListener {
             sharePhoto()
         }
@@ -71,7 +59,7 @@ class ShareFragment : Fragment() {
                     if (url.isBlank()) {
                         Toast.makeText(context, R.string.share_url_empty_toast, Toast.LENGTH_LONG)
                             .show()
-                        binding.fragmentShareUrlEt.setText("https://developer.android.com/images/android-developers.png")
+                        binding.fragmentShareUrlEt.setText(TEST_IMAGE_URL)
                     } else {
                         Utils.hideKeyboard(context, binding.fragmentShareUrlEt)
                         binding.fragmentShareResourcePb.isVisible = true
@@ -80,15 +68,15 @@ class ShareFragment : Fragment() {
                             MutableLiveData()
                         val uriLiveData: MutableLiveData<Resource<ResourceDownloadedModel, ResourceError>> =
                             MutableLiveData()
-                        progressLiveData.observe(viewLifecycleOwner, Observer {
+                        progressLiveData.observe(viewLifecycleOwner) {
                             Timber.d(
                                 "Downloading %s progress %s",
                                 it.resourceId,
                                 it.progressDownload
                             )
                             binding.fragmentShareResourcePb.progress = it.progressDownload
-                        })
-                        uriLiveData.observe(viewLifecycleOwner, Observer {
+                        }
+                        uriLiveData.observe(viewLifecycleOwner) {
                             Timber.d(
                                 "Uri from downloaded resource %s: %s",
                                 it.data?.resourceId,
@@ -108,7 +96,7 @@ class ShareFragment : Fragment() {
                                 val text = getString(R.string.error_downloading_resource)
                                 Utils.showSimpleDialog(context, title, text)
                             }
-                        })
+                        }
                         downloadResourceViewModel.downloadResource(
                             url,
                             context,
@@ -123,6 +111,7 @@ class ShareFragment : Fragment() {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == SHARE_CODE) {
@@ -162,11 +151,6 @@ class ShareFragment : Fragment() {
                     }
                 })
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
 }

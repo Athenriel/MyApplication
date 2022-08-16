@@ -1,17 +1,14 @@
-package com.example.myapplication.ui
+package com.example.myapplication.ui.viewuser
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentViewUsersBinding
 import com.example.myapplication.datasource.local.database.entity.UserEntity
-import com.example.myapplication.ui.adapter.UserRecyclerAdapter
-import com.example.myapplication.ui.adapter.UserRecyclerListener
+import com.example.myapplication.ui.BaseFragment
+import com.example.myapplication.ui.cuenta.adapter.UserRecyclerAdapter
+import com.example.myapplication.ui.cuenta.adapter.UserRecyclerListener
 import com.example.myapplication.utils.Utils
 import com.example.myapplication.viewmodel.UserViewModel
 import org.koin.android.ext.android.inject
@@ -19,22 +16,12 @@ import org.koin.android.ext.android.inject
 /**
  * Created by Athenriel on 26/03/2020.
  */
-class ViewUsersFragment : Fragment() {
+class ViewUsersFragment :
+    BaseFragment<FragmentViewUsersBinding>(FragmentViewUsersBinding::inflate) {
 
-    private var _binding: FragmentViewUsersBinding? = null
-    private val binding get() = _binding!!
     private val userViewModel: UserViewModel by inject()
     private var userRecyclerAdapter: UserRecyclerAdapter? = null
     private val userList: MutableList<UserEntity> = mutableListOf()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentViewUsersBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -53,7 +40,7 @@ class ViewUsersFragment : Fragment() {
         }
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.fragmentViewUsersUsersRv.layoutManager = layoutManager
-        userViewModel.getUsers().observe(viewLifecycleOwner, Observer { userListResource ->
+        userViewModel.getUsers().observe(viewLifecycleOwner) { userListResource ->
             if (userListResource.error == null && userListResource.data != null) {
                 userList.clear()
                 userList.addAll(userListResource.data)
@@ -61,7 +48,7 @@ class ViewUsersFragment : Fragment() {
                     override fun deleteUser(user: UserEntity) {
                         if (userList.contains(user)) {
                             userViewModel.deleteUser(user)
-                                .observe(viewLifecycleOwner, Observer { userDeletionResource ->
+                                .observe(viewLifecycleOwner) { userDeletionResource ->
                                     if (userDeletionResource.error == null && userDeletionResource.data == true) {
                                         userList.remove(user)
                                         userRecyclerAdapter?.users = userList
@@ -82,7 +69,7 @@ class ViewUsersFragment : Fragment() {
                                             text
                                         )
                                     }
-                                })
+                                }
                         }
                     }
                 })
@@ -92,12 +79,7 @@ class ViewUsersFragment : Fragment() {
                 val text = getString(R.string.error_retrieving_users)
                 Utils.showSimpleDialog(this@ViewUsersFragment.context, title, text)
             }
-        })
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        }
     }
 
 }

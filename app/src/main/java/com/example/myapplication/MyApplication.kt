@@ -18,7 +18,6 @@ import com.example.myapplication.viewmodel.UserViewModel
 import com.example.myapplication.worker.DeviceIdUpdateWorker
 import com.google.firebase.FirebaseApp
 import org.koin.android.ext.koin.androidContext
-import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
@@ -31,6 +30,7 @@ class MyApplication : Application() {
 
     companion object {
         private const val PREFERENCES_KEY = "myAppPrefs"
+        private const val APP_DATABASE_NAME = "database"
     }
 
     override fun onCreate() {
@@ -39,10 +39,10 @@ class MyApplication : Application() {
         Timber.d("Timber logging is active")
         val db = Room.databaseBuilder(
             applicationContext,
-            AppDatabase::class.java, "database"
+            AppDatabase::class.java, APP_DATABASE_NAME
         ).build()
         startKoin {
-            androidLogger()
+            printLogger()
             androidContext(this@MyApplication)
             modules(module {
                 single { provideSharedPreferences(this@MyApplication) }

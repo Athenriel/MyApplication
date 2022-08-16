@@ -3,6 +3,7 @@ package com.example.myapplication.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.myapplication.datasource.Resource
 import com.example.myapplication.datasource.local.LocalDataSource
 import com.example.myapplication.datasource.local.PersistanceError
@@ -11,6 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import java.util.regex.Pattern
 
 /**
@@ -25,21 +27,17 @@ class UserViewModel(private val localDataSource: LocalDataSource) : ViewModel() 
 
     fun getUsers(): LiveData<Resource<List<UserEntity>?, PersistanceError>> {
         val data = MutableLiveData<Resource<List<UserEntity>?, PersistanceError>>()
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch {
             try {
                 val users = localDataSource.getUsers()
-                withContext(Dispatchers.Main) {
-                    data.postValue(Resource.success(users))
-                }
+                data.postValue(Resource.success(users))
             } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    e.printStackTrace()
-                    data.postValue(
-                        Resource.error(
-                            PersistanceError.UNKNOWN, null
-                        )
+                Timber.e(e)
+                data.postValue(
+                    Resource.error(
+                        PersistanceError.UNKNOWN, null
                     )
-                }
+                )
             }
         }
         return data
@@ -56,17 +54,13 @@ class UserViewModel(private val localDataSource: LocalDataSource) : ViewModel() 
         lastName: String
     ): LiveData<Resource<Boolean, PersistanceError>> {
         val data = MutableLiveData<Resource<Boolean, PersistanceError>>()
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch {
             try {
                 localDataSource.insertUser(UserEntity(0, firstName, lastName))
-                withContext(Dispatchers.Main) {
-                    data.postValue(Resource.success(true))
-                }
+                data.postValue(Resource.success(true))
             } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    e.printStackTrace()
-                    data.postValue(Resource.error(PersistanceError.UNKNOWN, e.message))
-                }
+                Timber.e(e)
+                data.postValue(Resource.error(PersistanceError.UNKNOWN, e.message))
             }
         }
         return data
@@ -74,17 +68,13 @@ class UserViewModel(private val localDataSource: LocalDataSource) : ViewModel() 
 
     fun deleteUser(user: UserEntity): LiveData<Resource<Boolean, PersistanceError>> {
         val data = MutableLiveData<Resource<Boolean, PersistanceError>>()
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch {
             try {
                 localDataSource.deleteUser(user)
-                withContext(Dispatchers.Main) {
-                    data.postValue(Resource.success(true))
-                }
+                data.postValue(Resource.success(true))
             } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    e.printStackTrace()
-                    data.postValue(Resource.error(PersistanceError.UNKNOWN, e.message))
-                }
+                Timber.e(e)
+                data.postValue(Resource.error(PersistanceError.UNKNOWN, e.message))
             }
         }
         return data
