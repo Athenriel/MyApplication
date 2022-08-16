@@ -4,8 +4,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.example.myapplication.ui.views.MyView
-        android:id="@+id/graphics_my_view"
+    <com.example.myapplication.ui.views.ShapesView
+        android:id="@+id/graphics_shapes_view"
         android:layout_width="300dp"
         android:layout_height="300dp"
         app:layout_constraintTop_toTopOf="parent"
@@ -23,6 +23,18 @@
         android:text="@string/graphics_first_button_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/graphics_my_view" />
+        app:layout_constraintTop_toBottomOf="@+id/graphics_shapes_view" />
+
+    <Button
+        android:id="@+id/graphics_second_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/graphics_second_button_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/graphics_first_btn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

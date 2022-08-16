@@ -15,6 +15,7 @@
             app:destination="@id/CreateUserFragment"
             app:enterAnim="@anim/slide_up"
             app:exitAnim="@anim/slide_down"
+            app:popEnterAnim="@anim/slide_up"
             app:popExitAnim="@anim/slide_down"
             app:popUpTo="@id/SplashFragment"
             app:popUpToInclusive="true" />
@@ -23,6 +24,7 @@
             app:destination="@id/ViewUsersFragment"
             app:enterAnim="@anim/slide_up"
             app:exitAnim="@anim/slide_down"
+            app:popEnterAnim="@anim/slide_up"
             app:popExitAnim="@anim/slide_down"
             app:popUpTo="@id/SplashFragment"
             app:popUpToInclusive="true" />
@@ -38,6 +40,7 @@
             app:destination="@id/CuentaFragment"
             app:enterAnim="@anim/slide_up"
             app:exitAnim="@anim/slide_down"
+            app:popEnterAnim="@anim/slide_up"
             app:popExitAnim="@anim/slide_down" />
     </fragment>
 
@@ -80,6 +83,33 @@
         android:id="@+id/GraphicsFragment"
         android:name="com.example.myapplication.ui.graphics.GraphicsFragment"
         android:label="@string/graphics_title"
-        tools:layout="@layout/fragment_graphics" />
+        tools:layout="@layout/fragment_graphics">
+        <action
+            android:id="@+id/action_GraphicsFragment_to_PolygonsFragment"
+            app:destination="@id/PolygonsFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down"
+            app:popEnterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down" />
+        <action
+            android:id="@+id/action_GraphicsFragment_to_GraphsFragment"
+            app:destination="@id/GraphsFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down"
+            app:popEnterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/PolygonsFragment"
+        android:name="com.example.myapplication.ui.graphics.PolygonsFragment"
+        android:label="@string/polygons_title"
+        tools:layout="@layout/fragment_polygons" />
+
+    <fragment
+        android:id="@+id/GraphsFragment"
+        android:name="com.example.myapplication.ui.graphics.GraphsFragment"
+        android:label="@string/graphs_title"
+        tools:layout="@layout/fragment_graphs" />
 
 </navigation>
