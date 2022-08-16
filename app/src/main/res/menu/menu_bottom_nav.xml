@@ -21,4 +21,9 @@
         android:icon="@android:drawable/ic_dialog_map"
         android:title="@string/location_title" />
 
+    <item
+        android:id="@+id/menu_graphics_nav"
+        android:icon="@android:drawable/ic_media_ff"
+        android:title="@string/graphics_title" />
+
 </menu>

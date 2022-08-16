@@ -76,4 +76,10 @@
         android:label="@string/location_title"
         tools:layout="@layout/fragment_location" />
 
+    <fragment
+        android:id="@+id/GraphicsFragment"
+        android:name="com.example.myapplication.ui.graphics.GraphicsFragment"
+        android:label="@string/graphics_title"
+        tools:layout="@layout/fragment_graphics" />
+
 </navigation>

@@ -1,23 +1,36 @@
 <resources>
     <string name="app_name">My Application</string>
+
+    <!-- notification channel -->
     <string name="default_notification_channel_id">Default</string>
     <string name="default_notification_channel_name">Basic</string>
     <string name="default_notification_channel_description">Default channel for push notifications</string>
+
+    <!-- contend descriptors -->
     <string name="toast_copied_clipboard">Copied to Clipboard</string>
     <string name="content_description_remove_button">Delete Item</string>
     <string name="content_description_share_image">Share Image</string>
     <string name="content_description_success_image">Success</string>
+
+    <!-- splash -->
     <string name="splash_title">Splash</string>
+
+    <!-- create user -->
     <string name="create_user_btn">Create User</string>
     <string name="create_user_title">Create User</string>
+    <string name="create_user_account_text">Account</string>
     <string name="first_name_text">First Name</string>
     <string name="last_name_text">Last Name</string>
     <string name="error_name_empty">&#160;must not be empty</string>
     <string name="error_name_regex">&#160;must contain only alphabetic characters</string>
     <string name="create_user_success">Created User Successfully</string>
+
+    <!-- view users -->
+    <string name="view_users_title">View Users</string>
     <string name="delete_user_title">Delete User</string>
     <string name="delete_user_success">Deleted User Successfully</string>
-    <string name="view_users_title">View Users</string>
+
+    <!-- share -->
     <string name="share_title">Share</string>
     <string name="share_btn">Share</string>
     <string name="pick_file_btn">Pick</string>
@@ -25,6 +38,8 @@
     <string name="image_shared_text">Image Shared</string>
     <string name="share_url_empty_toast">Image Url is empty</string>
     <string name="image_url_hint">Image Url</string>
+
+    <!-- location -->
     <string name="location_title">Location</string>
     <string name="last_seen_in">Last seen in</string>
     <string name="coord_lat">Latitude:&#160;</string>
@@ -33,6 +48,12 @@
     <string name="location_shared_text">Location Shared</string>
     <string name="explain_location_required_title">Location Required</string>
     <string name="explain_location_required_text">In order to retrieve your current location and share it, please allow Location</string>
+
+    <!-- graphics -->
+    <string name="graphics_title">Graphics</string>
+    <string name="graphics_first_button_text">First</string>
+
+    <!-- errors -->
     <string name="error_title">Error</string>
     <string name="error_retrieving_users">An error occurred while retrieving users.</string>
     <string name="error_creating_user">An error occurred while creating the user.</string>
