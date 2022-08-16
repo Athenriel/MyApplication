@@ -13,6 +13,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import androidx.work.WorkManager
 import com.example.myapplication.R
@@ -44,7 +45,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val navController = findNavController(R.id.nav_host_fragment)
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
         binding.bottomNavBar.setupWithNavController(navController)
         binding.bottomNavBar.setOnItemSelectedListener {
             val clearNavOptions =
@@ -67,6 +69,10 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(R.id.LocationFragment, null, clearNavOptions)
                     true
                 }
+                R.id.menu_graphics_nav -> {
+                    navController.navigate(R.id.GraphicsFragment, null, clearNavOptions)
+                    true
+                }
                 else -> false
             }
         }
@@ -76,6 +82,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.ViewUsersFragment -> true
                 R.id.ShareFragment -> true
                 R.id.LocationFragment -> true
+                R.id.GraphicsFragment -> true
                 else -> false
             }
         }
