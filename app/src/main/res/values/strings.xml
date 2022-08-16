@@ -51,7 +51,7 @@
 
     <!-- graphics -->
     <string name="graphics_title">Graphics</string>
-    <string name="graphics_first_button_text">First</string>
+    <string name="graphics_first_button_text">Second</string>
 
     <!-- errors -->
     <string name="error_title">Error</string>
