@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.cuenta
+package com.example.myapplication.ui.createuser
 
 import android.app.PendingIntent
 import android.content.Intent
@@ -47,7 +47,7 @@ class CreateUserFragment :
         }
         binding.fragmentCreateUserCuentaBtn.setOnClickListener {
             val directions =
-                CreateUserFragmentDirections.actionCreateUserFragmentToCuentaFragment("ID3456787654")
+                CreateUserFragmentDirections.actionCreateUserFragmentToAccountFragment("ID3456787654")
             findNavController().navigate(directions)
         }
     }

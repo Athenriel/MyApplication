@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.cuenta.adapter
+package com.example.myapplication.ui.createuser.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

@@ -32,12 +32,12 @@
 
     <fragment
         android:id="@+id/CreateUserFragment"
-        android:name="com.example.myapplication.ui.cuenta.CreateUserFragment"
+        android:name="com.example.myapplication.ui.createuser.CreateUserFragment"
         android:label="@string/create_user_title"
         tools:layout="@layout/fragment_create_user">
         <action
-            android:id="@+id/action_CreateUserFragment_to_CuentaFragment"
-            app:destination="@id/CuentaFragment"
+            android:id="@+id/action_CreateUserFragment_to_AccountFragment"
+            app:destination="@id/AccountFragment"
             app:enterAnim="@anim/slide_up"
             app:exitAnim="@anim/slide_down"
             app:popEnterAnim="@anim/slide_up"
@@ -45,10 +45,10 @@
     </fragment>
 
     <fragment
-        android:id="@+id/CuentaFragment"
-        android:name="com.example.myapplication.ui.cuenta.CuentaFragment"
+        android:id="@+id/AccountFragment"
+        android:name="com.example.myapplication.ui.createuser.AccountFragment"
         android:label="@string/create_user_title"
-        tools:layout="@layout/fragment_cuenta">
+        tools:layout="@layout/fragment_account">
         <argument
             android:name="openWithUser"
             android:defaultValue="@null"
