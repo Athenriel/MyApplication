@@ -35,6 +35,8 @@ Learn the basics with this simple App:
 - Share location with Intent Action Send
 - Get the Firebase Instance Id device token and send it to your server using a retrying worker
 - Coroutine Worker as well as Coroutines implemented in the Local and Remote Data Sources
+- Demos on 2d graphics
+- Plotting a line chart and a pie chart
 - View Binding and Navigation from Android Jetpack
 - Unit Tests for the View Models and the Workers using KoinTest and Mockk
 - Some neat utils
