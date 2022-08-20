@@ -7,27 +7,30 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 
-class MyView(context: Context, attrs: AttributeSet): View(context, attrs) {
+/**
+ * Created by Athenriel on 8/16/2022
+ */
+class ShapesView(context: Context, attrs: AttributeSet): View(context, attrs) {
 
-    private var redStrokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    private val redStrokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE //stroke only no fill
         color = -0x10000 //color red
         strokeWidth = 5f //set the line stroke width to 5
     }
 
-    private var blueStrokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    private val blueStrokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE //stroke only no fill
         color = Color.BLUE //color blue
         strokeWidth = 5f //set the line stroke width to 5
     }
 
-    private var greenStrokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    private val greenStrokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE //stroke only no fill
         color = Color.GREEN //color green
         strokeWidth = 5f //set the line stroke width to 5
     }
 
-    private var blackStrokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    private val blackStrokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE //stroke only no fill
         color = Color.BLACK //color black
         strokeWidth = 5f //set the line stroke width to 5
