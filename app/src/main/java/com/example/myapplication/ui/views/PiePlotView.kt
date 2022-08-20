@@ -1,7 +1,10 @@
 package com.example.myapplication.ui.views
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
 
@@ -73,19 +76,7 @@ class PiePlotView(context: Context, attrs: AttributeSet) : View(context, attrs) 
 
     private var currentColor = 0
 
-    private val dataList = listOf(
-        1,
-        1,
-        2,
-        3,
-        5,
-        8,
-        13,
-        21,
-        34,
-        55,
-        89
-    )
+    private var dataList = mutableListOf<Int>()
 
     private var rectF = RectF(0F, 0F, 0F, 0F)
 
@@ -100,6 +91,11 @@ class PiePlotView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         }
         currentColor++
         return paint
+    }
+
+    fun setDataList(list: List<Int>) {
+        dataList.clear()
+        dataList.addAll(list)
     }
 
     override fun onDraw(canvas: Canvas) {

@@ -12,9 +12,9 @@ import kotlinx.coroutines.*
 import timber.log.Timber
 
 /**
- * Created by Francisco Bartilotti on 05/03/2021.
+ * Created by Athenriel on 05/03/2021.
  */
-class CuentaViewModel(private val localDataSource: LocalDataSource) : ViewModel() {
+class AccountViewModel(private val localDataSource: LocalDataSource) : ViewModel() {
 
     private var job: Job? = null
 

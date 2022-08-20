@@ -8,7 +8,6 @@ import android.graphics.Path
 import android.util.AttributeSet
 import android.view.View
 import com.example.myapplication.utils.createLineGraph
-import kotlin.math.sin
 
 /**
  * Created by Athenriel on 8/18/2022
@@ -33,18 +32,17 @@ class LinePlotView(context: Context, attrs: AttributeSet) : View(context, attrs)
         strokeWidth = 5f //set the line stroke width to 5
     }
 
-    private val dataList = listOf(11, 29, 10, 20, 12, 5, 31, 24, 21, 13)
-
-    private val sinDataList = mutableListOf<Int>().apply {
-        for (i in 0..50) {
-            add((10 * sin(i.toFloat())).toInt())
-        }
-    }
+    private var dataList = mutableListOf<Int>()
 
     private val xBuffer = 10
     private val yBuffer = 10
 
     private val path = Path()
+
+    fun setDataList(list: List<Int>) {
+        dataList.clear()
+        dataList.addAll(list)
+    }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -57,8 +55,7 @@ class LinePlotView(context: Context, attrs: AttributeSet) : View(context, attrs)
             blueStrokePaint
         )
         canvas.drawLine(xBuffer.toFloat(), height.toFloat(), xBuffer.toFloat(), 0F, redStrokePaint)
-        //path.createLineGraph(dataList, width, height, xBuffer, yBuffer)
-        path.createLineGraph(sinDataList, width, height, xBuffer, yBuffer)
+        path.createLineGraph(dataList, width, height, xBuffer, yBuffer)
         canvas.drawPath(path, blackStrokePaint)
     }
 

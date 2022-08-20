@@ -7,8 +7,8 @@ import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentViewUsersBinding
 import com.example.myapplication.datasource.local.database.entity.UserEntity
 import com.example.myapplication.ui.BaseFragment
-import com.example.myapplication.ui.cuenta.adapter.UserRecyclerAdapter
-import com.example.myapplication.ui.cuenta.adapter.UserRecyclerListener
+import com.example.myapplication.ui.createuser.adapter.UserRecyclerAdapter
+import com.example.myapplication.ui.createuser.adapter.UserRecyclerListener
 import com.example.myapplication.utils.Utils
 import com.example.myapplication.viewmodel.UserViewModel
 import org.koin.android.ext.android.inject
