@@ -98,6 +98,13 @@
             app:exitAnim="@anim/slide_down"
             app:popEnterAnim="@anim/slide_up"
             app:popExitAnim="@anim/slide_down" />
+        <action
+            android:id="@+id/action_GraphicsFragment_to_ThreeDCubeFragment"
+            app:destination="@id/ThreeDCubeFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down"
+            app:popEnterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down" />
     </fragment>
 
     <fragment
@@ -111,5 +118,11 @@
         android:name="com.example.myapplication.ui.graphics.GraphsFragment"
         android:label="@string/graphs_title"
         tools:layout="@layout/fragment_graphs" />
+
+    <fragment
+        android:id="@+id/ThreeDCubeFragment"
+        android:name="com.example.myapplication.ui.graphics.ThreeDCubeFragment"
+        android:label="@string/three_d_cube_title"
+        tools:layout="@layout/fragment_three_d" />
 
 </navigation>
