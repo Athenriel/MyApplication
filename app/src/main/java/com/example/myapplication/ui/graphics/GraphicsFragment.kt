@@ -21,6 +21,10 @@ class GraphicsFragment : BaseFragment<FragmentGraphicsBinding>(FragmentGraphicsB
             val directions = GraphicsFragmentDirections.actionGraphicsFragmentToGraphsFragment()
             findNavController().navigate(directions)
         }
+        binding.graphicsThirdBtn.setOnClickListener {
+            val directions = GraphicsFragmentDirections.actionGraphicsFragmentToThreeDCubeFragment()
+            findNavController().navigate(directions)
+        }
     }
 
 }
