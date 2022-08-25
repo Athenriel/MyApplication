@@ -4,6 +4,7 @@ import android.graphics.Path
 import android.graphics.Point
 import com.example.myapplication.model.ThreeDCoordinatesModel
 import kotlin.math.cos
+import kotlin.math.pow
 import kotlin.math.sin
 
 /**
@@ -308,6 +309,26 @@ object GraphicUtils {
         }
     }
 
+    fun shearThreeDCoordinates(
+        threeDCoordinatesList: List<ThreeDCoordinatesModel>,
+        shearX: Double,
+        shearY: Double,
+        useCenter: Boolean = true
+    ): List<ThreeDCoordinatesModel> {
+        val matrix = getIdentityMatrix()
+        matrix[2] = shearX
+        matrix[6] = shearY
+        return if (useCenter) {
+            val center = centerOfThreeDCoordinates(threeDCoordinatesList)
+            val movedInput =
+                translateThreeDCoordinates(threeDCoordinatesList, -center.x, -center.y, -center.z)
+            val tempCoordinates = transformThreeDCoordinates(movedInput, matrix)
+            return translateThreeDCoordinates(tempCoordinates, center.x, center.y, center.z)
+        } else {
+            transformThreeDCoordinates(threeDCoordinatesList, matrix)
+        }
+    }
+
     fun rotateInXThreeDCoordinates(
         threeDCoordinatesList: List<ThreeDCoordinatesModel>,
         angle: Float,
@@ -374,24 +395,37 @@ object GraphicUtils {
         }
     }
 
-    fun shearThreeDCoordinates(
+    fun quaternionRotateThreeDCoordinates(
         threeDCoordinatesList: List<ThreeDCoordinatesModel>,
-        shearX: Double,
-        shearY: Double,
-        useCenter: Boolean = true
+        angle: Float,
+        xAxis: Double,
+        yAxis: Double,
+        zAxis: Double
     ): List<ThreeDCoordinatesModel> {
+        val resultList = mutableListOf<ThreeDCoordinatesModel>()
+        val theta = angleToRadians(angle) / 2
+        val sinTheta = sin(theta)
+        val cosTheta = cos(theta)
         val matrix = getIdentityMatrix()
-        matrix[2] = shearX
-        matrix[6] = shearY
-        return if (useCenter) {
-            val center = centerOfThreeDCoordinates(threeDCoordinatesList)
-            val movedInput =
-                translateThreeDCoordinates(threeDCoordinatesList, -center.x, -center.y, -center.z)
-            val tempCoordinates = transformThreeDCoordinates(movedInput, matrix)
-            return translateThreeDCoordinates(tempCoordinates, center.x, center.y, center.z)
-        } else {
-            transformThreeDCoordinates(threeDCoordinatesList, matrix)
+        val w = cosTheta
+        val x = xAxis * sinTheta
+        val y = yAxis * sinTheta
+        val z = zAxis * sinTheta
+        matrix[0] = w.pow(2) + x.pow(2) - y.pow(2) - z.pow(2)
+        matrix[1] = 2 * x * y - 2 * w * z
+        matrix[2] = 2 * x * z + 2 * w * y
+        matrix[4] = 2 * x * y + 2 * w * z
+        matrix[5] = w.pow(2) + y.pow(2) - x.pow(2) - z.pow(2)
+        matrix[6] = 2 * y * z - 2 * w * x
+        matrix[8] = 2 * x * z - 2 * w * y
+        matrix[9] = 2 * y * z + 2 * w * x
+        matrix[10] = w.pow(2) + z.pow(2) - x.pow(2) - y.pow(2)
+        for (coordinate in threeDCoordinatesList) {
+            val newCoordinate = transformThreeDCoordinate(coordinate, matrix)
+            newCoordinate.normalize()
+            resultList.add(newCoordinate)
         }
+        return resultList
     }
 
 }
