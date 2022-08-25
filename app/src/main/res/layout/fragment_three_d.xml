@@ -5,11 +5,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.example.myapplication.ui.views.ThreeDCubeView
-        android:id="@+id/three_d_three_d_cube_view"
+        android:id="@+id/three_d_first_three_d_cube_view"
         android:layout_width="300dp"
         android:layout_height="300dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.example.myapplication.ui.views.ThreeDCubeView
+        android:id="@+id/three_d_second_three_d_cube_view"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/three_d_first_three_d_cube_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

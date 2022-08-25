@@ -31,7 +31,7 @@ class ThreeDCubeFragment : BaseFragment<FragmentThreeDBinding>(FragmentThreeDBin
         )
         val translatedThreeDCoordinatesList =
             GraphicUtils.translateThreeDCoordinates(coordinateList, 2.0, 2.0, 2.0)
-        val scaledThreeDCoordinatesList =
+        val scaledFirstThreeDCoordinatesList =
             GraphicUtils.scaleThreeDCoordinates(
                 translatedThreeDCoordinatesList,
                 40.0,
@@ -39,34 +39,21 @@ class ThreeDCubeFragment : BaseFragment<FragmentThreeDBinding>(FragmentThreeDBin
                 40.0,
                 false
             )
-        //var rotatedThreeDCoordinatesList = GraphicUtils.rotateInYThreeDCoordinates(scaledThreeDCoordinatesList, 45f, false)
-        //rotatedThreeDCoordinatesList = GraphicUtils.rotateInXThreeDCoordinates(rotatedThreeDCoordinatesList, 45f, false)
-        //rotatedThreeDCoordinatesList = GraphicUtils.rotateInZThreeDCoordinates(rotatedThreeDCoordinatesList, 80f, false)
-        //rotatedThreeDCoordinatesList = GraphicUtils.rotateInYThreeDCoordinates(rotatedThreeDCoordinatesList, 30f, false)
-        //val shearedThreeDCoordinatesList = GraphicUtils.shearThreeDCoordinates(scaledThreeDCoordinatesList, 2.0, 1.0, false)
-        binding.threeDThreeDCubeView.setThreeDCoordinates(scaledThreeDCoordinatesList)
-        val timerTask = object : TimerTask() {
+        val projectedThreeDCoordinatesList = GraphicUtils.perspectiveProjectThreeDCoordinates(translatedThreeDCoordinatesList, 1.0, -1.0, -1.0, 1.0, 1.0, 1.1)
+        var scaledSecondThreeDCoordinatesList =
+            GraphicUtils.scaleThreeDCoordinates(
+                projectedThreeDCoordinatesList,
+                40.0,
+                40.0,
+                40.0,
+                false
+            )
+        scaledSecondThreeDCoordinatesList = GraphicUtils.translateThreeDCoordinates(scaledSecondThreeDCoordinatesList, 200.0, 200.0, 0.0)
+        val firstTimerTask = object : TimerTask() {
             var angle = 0f
             override fun run() {
-                /*
-                var rotatedThreeDCoordinatesList = GraphicUtils.rotateInZThreeDCoordinates(
-                    scaledThreeDCoordinatesList,
-                    60f,
-                    false
-                )
-                rotatedThreeDCoordinatesList = GraphicUtils.rotateInYThreeDCoordinates(
-                    rotatedThreeDCoordinatesList,
-                    90f,
-                    false
-                )
-                rotatedThreeDCoordinatesList = GraphicUtils.rotateInXThreeDCoordinates(
-                    rotatedThreeDCoordinatesList,
-                    angle,
-                    false
-                )
-                */
                 var rotatedThreeDCoordinatesList = GraphicUtils.quaternionRotateThreeDCoordinates(
-                    scaledThreeDCoordinatesList,
+                    scaledFirstThreeDCoordinatesList,
                     angle,
                     0.0,
                     1.0,
@@ -79,20 +66,21 @@ class ThreeDCubeFragment : BaseFragment<FragmentThreeDBinding>(FragmentThreeDBin
                     0.0
                 )
                 if (!viewDestroyed) {
-                    binding.threeDThreeDCubeView.setThreeDCoordinates(rotatedThreeDCoordinatesList)
+                    binding.threeDFirstThreeDCubeView.setThreeDCoordinates(rotatedThreeDCoordinatesList)
                 }
                 angle += 10
                 if (angle >= 360) {
                     angle = 0f
                 }
             }
-            /*
+        }
+        val secondTimerTask = object : TimerTask() {
             var positionX = 0f
             var dir = true
-            var movedThreeDCoordinatesList = scaledThreeDCoordinatesList
+            var movedThreeDCoordinatesList = scaledSecondThreeDCoordinatesList
             override fun run() {
                 if (!viewDestroyed) {
-                    if (positionX + 80 >= binding.threeDThreeDCubeView.width && dir) {
+                    if (positionX + 80 >= binding.threeDSecondThreeDCubeView.width && dir) {
                         dir = false
                     } else if (!dir && positionX <= 0) {
                         dir = true
@@ -106,12 +94,12 @@ class ThreeDCubeFragment : BaseFragment<FragmentThreeDBinding>(FragmentThreeDBin
                     GraphicUtils.translateThreeDCoordinates(movedThreeDCoordinatesList, -1.0, 0.0, 0.0)
                 }
                 if (!viewDestroyed) {
-                    binding.threeDThreeDCubeView.setThreeDCoordinates(movedThreeDCoordinatesList)
+                    binding.threeDSecondThreeDCubeView.setThreeDCoordinates(movedThreeDCoordinatesList)
                 }
             }
-            */
         }
-        timer.scheduleAtFixedRate(timerTask, 100, 100)
+        timer.scheduleAtFixedRate(firstTimerTask, 100, 100)
+        timer.scheduleAtFixedRate(secondTimerTask, 100, 2)
     }
 
     override fun onDestroyView() {
