@@ -14,9 +14,11 @@ import java.util.*
 class ThreeDCubeFragment : BaseFragment<FragmentThreeDBinding>(FragmentThreeDBinding::inflate) {
 
     private val timer = Timer()
+    private var viewDestroyed = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewDestroyed = false
         val coordinateList = listOf(
             ThreeDCoordinatesModel(-1.0, -1.0, -1.0),
             ThreeDCoordinatesModel(-1.0, -1.0, 1.0),
@@ -46,9 +48,10 @@ class ThreeDCubeFragment : BaseFragment<FragmentThreeDBinding>(FragmentThreeDBin
         val timerTask = object : TimerTask() {
             var angle = 0f
             override fun run() {
+                /*
                 var rotatedThreeDCoordinatesList = GraphicUtils.rotateInZThreeDCoordinates(
                     scaledThreeDCoordinatesList,
-                    angle,
+                    60f,
                     false
                 )
                 rotatedThreeDCoordinatesList = GraphicUtils.rotateInYThreeDCoordinates(
@@ -58,8 +61,16 @@ class ThreeDCubeFragment : BaseFragment<FragmentThreeDBinding>(FragmentThreeDBin
                 )
                 rotatedThreeDCoordinatesList = GraphicUtils.rotateInXThreeDCoordinates(
                     rotatedThreeDCoordinatesList,
-                    25f,
+                    angle,
                     false
+                )
+                */
+                var rotatedThreeDCoordinatesList = GraphicUtils.quaternionRotateThreeDCoordinates(
+                    scaledThreeDCoordinatesList,
+                    angle,
+                    0.0,
+                    1.0,
+                    1.0
                 )
                 rotatedThreeDCoordinatesList = GraphicUtils.translateThreeDCoordinates(
                     rotatedThreeDCoordinatesList,
@@ -67,12 +78,38 @@ class ThreeDCubeFragment : BaseFragment<FragmentThreeDBinding>(FragmentThreeDBin
                     200.0,
                     0.0
                 )
-                binding.threeDThreeDCubeView.setThreeDCoordinates(rotatedThreeDCoordinatesList)
+                if (!viewDestroyed) {
+                    binding.threeDThreeDCubeView.setThreeDCoordinates(rotatedThreeDCoordinatesList)
+                }
                 angle += 10
                 if (angle >= 360) {
                     angle = 0f
                 }
             }
+            /*
+            var positionX = 0f
+            var dir = true
+            var movedThreeDCoordinatesList = scaledThreeDCoordinatesList
+            override fun run() {
+                if (!viewDestroyed) {
+                    if (positionX + 80 >= binding.threeDThreeDCubeView.width && dir) {
+                        dir = false
+                    } else if (!dir && positionX <= 0) {
+                        dir = true
+                    }
+                }
+                movedThreeDCoordinatesList = if (dir) {
+                    positionX += 1
+                    GraphicUtils.translateThreeDCoordinates(movedThreeDCoordinatesList, 1.0, 0.0, 0.0)
+                } else {
+                    positionX -= 1
+                    GraphicUtils.translateThreeDCoordinates(movedThreeDCoordinatesList, -1.0, 0.0, 0.0)
+                }
+                if (!viewDestroyed) {
+                    binding.threeDThreeDCubeView.setThreeDCoordinates(movedThreeDCoordinatesList)
+                }
+            }
+            */
         }
         timer.scheduleAtFixedRate(timerTask, 100, 100)
     }
@@ -80,6 +117,7 @@ class ThreeDCubeFragment : BaseFragment<FragmentThreeDBinding>(FragmentThreeDBin
     override fun onDestroyView() {
         super.onDestroyView()
         timer.cancel()
+        viewDestroyed = true
     }
 
 }
