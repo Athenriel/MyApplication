@@ -6,6 +6,7 @@ import com.example.myapplication.model.ThreeDCoordinatesModel
 import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.sin
+import kotlin.math.tan
 
 /**
  * Created by Athenriel on 8/18/2022
@@ -420,6 +421,74 @@ object GraphicUtils {
         matrix[8] = 2 * x * z - 2 * w * y
         matrix[9] = 2 * y * z + 2 * w * x
         matrix[10] = w.pow(2) + z.pow(2) - x.pow(2) - y.pow(2)
+        for (coordinate in threeDCoordinatesList) {
+            val newCoordinate = transformThreeDCoordinate(coordinate, matrix)
+            newCoordinate.normalize()
+            resultList.add(newCoordinate)
+        }
+        return resultList
+    }
+
+    fun orthogonalProjectThreeDCoordinates(
+        threeDCoordinatesList: List<ThreeDCoordinatesModel>
+    ): List<ThreeDCoordinatesModel> {
+        val resultList = mutableListOf<ThreeDCoordinatesModel>()
+        val matrix = getIdentityMatrix()
+        matrix[10] = 0.0
+        for (coordinate in threeDCoordinatesList) {
+            val newCoordinate = transformThreeDCoordinate(coordinate, matrix)
+            newCoordinate.normalize()
+            resultList.add(newCoordinate)
+        }
+        return resultList
+    }
+
+    fun perspectiveProjectThreeDCoordinates(
+        threeDCoordinatesList: List<ThreeDCoordinatesModel>,
+        right: Double,
+        left: Double,
+        top: Double,
+        bottom: Double,
+        near: Double,
+        far: Double
+    ): List<ThreeDCoordinatesModel> {
+        val resultList = mutableListOf<ThreeDCoordinatesModel>()
+        val matrix = getIdentityMatrix()
+        matrix[0] = (2 * near) / (right - left)
+        matrix[2] = (right + left) / (right - left)
+        matrix[5] = (2 * near) / (top - bottom)
+        matrix[6] = (top + bottom) / (top - bottom)
+        matrix[10] = -(far + near) / (far - near)
+        matrix[11] = -(2 * far * near) / (far - near)
+        matrix[14] = -1.0
+        matrix[15] = 0.0
+        for (coordinate in threeDCoordinatesList) {
+            val newCoordinate = transformThreeDCoordinate(coordinate, matrix)
+            newCoordinate.normalize()
+            resultList.add(newCoordinate)
+        }
+        return resultList
+    }
+
+    fun symmetricViewFrustumProjectThreeDCoordinates(
+        threeDCoordinatesList: List<ThreeDCoordinatesModel>,
+        fieldOfView: Float,
+        right: Double,
+        left: Double,
+        top: Double,
+        bottom: Double,
+        near: Double,
+        far: Double
+    ): List<ThreeDCoordinatesModel> {
+        val resultList = mutableListOf<ThreeDCoordinatesModel>()
+        val matrix = getIdentityMatrix()
+        val aspectRatio = (right - left) / (top - bottom)
+        matrix[0] = 1.0 / (aspectRatio * tan(fieldOfView/2))
+        matrix[5] = 1.0 / tan(fieldOfView/2)
+        matrix[10] = -(far + near) / (far - near)
+        matrix[11] = -(2 * far * near) / (far - near)
+        matrix[14] = -1.0
+        matrix[15] = 0.0
         for (coordinate in threeDCoordinatesList) {
             val newCoordinate = transformThreeDCoordinate(coordinate, matrix)
             newCoordinate.normalize()
