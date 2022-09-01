@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 import com.example.myapplication.model.ThreeDCoordinatesModel
+import com.example.myapplication.utils.GraphicUtils.drawLinePairs
 import timber.log.Timber
 
 /**
@@ -38,24 +39,6 @@ class ThreeDCubeView(context: Context, attrs: AttributeSet) : View(context, attr
         threeDCoordinateList.clear()
         threeDCoordinateList.addAll(coordinateList)
         invalidate()
-    }
-
-    private fun drawLinePairs(
-        canvas: Canvas,
-        coordinateList: List<ThreeDCoordinatesModel>,
-        start: Int,
-        end: Int,
-        paint: Paint
-    ) {
-        if (coordinateList.size > end) {
-            canvas.drawLine(
-                coordinateList[start].x.toFloat(),
-                coordinateList[start].y.toFloat(),
-                coordinateList[end].x.toFloat(),
-                coordinateList[end].y.toFloat(),
-                paint
-            )
-        }
     }
 
     override fun onDraw(canvas: Canvas) {

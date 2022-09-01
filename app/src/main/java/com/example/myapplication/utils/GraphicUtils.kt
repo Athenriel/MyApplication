@@ -1,5 +1,7 @@
 package com.example.myapplication.utils
 
+import android.graphics.Canvas
+import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Point
 import com.example.myapplication.model.ThreeDCoordinatesModel
@@ -275,6 +277,87 @@ object GraphicUtils {
         return ThreeDCoordinatesModel((sumX / input.size), sumY / input.size, sumZ / input.size)
     }
 
+    private fun topOrBottomOfThreeDCoordinates(
+        input: List<ThreeDCoordinatesModel>,
+        top: Boolean
+    ): ThreeDCoordinatesModel {
+        var sumX = 0.0
+        var sumY = 0.0
+        var sumZ = 0.0
+        var tempList = mutableListOf<ThreeDCoordinatesModel>()
+        tempList.addAll(input)
+        if (top) {
+            tempList.sortBy { it.y }
+        } else {
+            tempList.sortByDescending { it.y }
+        }
+        tempList = tempList.subList(0, 3)
+        for (coordinate in tempList) {
+            sumX += coordinate.x
+            sumY += coordinate.y
+            sumZ += coordinate.z
+        }
+        return ThreeDCoordinatesModel(
+            (sumX / tempList.size),
+            sumY / tempList.size,
+            sumZ / tempList.size
+        )
+    }
+
+    private fun startOrEndOfThreeDCoordinates(
+        input: List<ThreeDCoordinatesModel>,
+        start: Boolean
+    ): ThreeDCoordinatesModel {
+        var sumX = 0.0
+        var sumY = 0.0
+        var sumZ = 0.0
+        var tempList = mutableListOf<ThreeDCoordinatesModel>()
+        tempList.addAll(input)
+        if (start) {
+            tempList.sortBy { it.x }
+        } else {
+            tempList.sortByDescending { it.x }
+        }
+        tempList = tempList.subList(0, 3)
+        for (coordinate in tempList) {
+            sumX += coordinate.x
+            sumY += coordinate.y
+            sumZ += coordinate.z
+        }
+        return ThreeDCoordinatesModel(
+            (sumX / tempList.size),
+            sumY / tempList.size,
+            sumZ / tempList.size
+        )
+    }
+
+    private fun frontOrBackOfThreeDCoordinates(
+        input: List<ThreeDCoordinatesModel>,
+        front: Boolean
+    ): ThreeDCoordinatesModel {
+        var sumX = 0.0
+        var sumY = 0.0
+        var sumZ = 0.0
+        var tempList = mutableListOf<ThreeDCoordinatesModel>()
+        tempList.addAll(input)
+        if (front) {
+            tempList.sortBy { it.z }
+        } else {
+            tempList.sortByDescending { it.z }
+        }
+        tempList = tempList.subList(0, 3)
+        for (coordinate in tempList) {
+            sumX += coordinate.x
+            sumY += coordinate.y
+            sumZ += coordinate.z
+        }
+        return ThreeDCoordinatesModel(
+            (sumX / tempList.size),
+            sumY / tempList.size,
+            sumZ / tempList.size
+        )
+    }
+
     fun translateThreeDCoordinates(
         threeDCoordinatesList: List<ThreeDCoordinatesModel>,
         tx: Double,
@@ -401,9 +484,10 @@ object GraphicUtils {
         angle: Float,
         xAxis: Double,
         yAxis: Double,
-        zAxis: Double
+        zAxis: Double,
+        rotationType: RotationType = RotationType.CENTER,
+        reference: ThreeDCoordinatesModel? = null
     ): List<ThreeDCoordinatesModel> {
-        val resultList = mutableListOf<ThreeDCoordinatesModel>()
         val theta = angleToRadians(angle) / 2
         val sinTheta = sin(theta)
         val cosTheta = cos(theta)
@@ -421,12 +505,92 @@ object GraphicUtils {
         matrix[8] = 2 * x * z - 2 * w * y
         matrix[9] = 2 * y * z + 2 * w * x
         matrix[10] = w.pow(2) + z.pow(2) - x.pow(2) - y.pow(2)
-        for (coordinate in threeDCoordinatesList) {
-            val newCoordinate = transformThreeDCoordinate(coordinate, matrix)
-            newCoordinate.normalize()
-            resultList.add(newCoordinate)
+        return when (rotationType) {
+            RotationType.CENTER -> {
+                val center = centerOfThreeDCoordinates(threeDCoordinatesList)
+                val movedInput =
+                    translateThreeDCoordinates(
+                        threeDCoordinatesList,
+                        -center.x,
+                        -center.y,
+                        -center.z
+                    )
+                val tempCoordinates = transformThreeDCoordinates(movedInput, matrix)
+                translateThreeDCoordinates(tempCoordinates, center.x, center.y, center.z)
+            }
+            RotationType.START -> {
+                val start = startOrEndOfThreeDCoordinates(threeDCoordinatesList, true)
+                val movedInput =
+                    translateThreeDCoordinates(threeDCoordinatesList, -start.x, -start.y, -start.z)
+                val tempCoordinates = transformThreeDCoordinates(movedInput, matrix)
+                translateThreeDCoordinates(tempCoordinates, start.x, start.y, start.z)
+            }
+            RotationType.END -> {
+                val end = startOrEndOfThreeDCoordinates(threeDCoordinatesList, false)
+                val movedInput =
+                    translateThreeDCoordinates(threeDCoordinatesList, -end.x, -end.y, -end.z)
+                val tempCoordinates = transformThreeDCoordinates(movedInput, matrix)
+                translateThreeDCoordinates(tempCoordinates, end.x, end.y, end.z)
+            }
+            RotationType.TOP -> {
+                val top = topOrBottomOfThreeDCoordinates(threeDCoordinatesList, true)
+                val movedInput =
+                    translateThreeDCoordinates(threeDCoordinatesList, -top.x, -top.y, -top.z)
+                val tempCoordinates = transformThreeDCoordinates(movedInput, matrix)
+                translateThreeDCoordinates(tempCoordinates, top.x, top.y, top.z)
+            }
+            RotationType.BOTTOM -> {
+                val bottom = topOrBottomOfThreeDCoordinates(threeDCoordinatesList, false)
+                val movedInput =
+                    translateThreeDCoordinates(
+                        threeDCoordinatesList,
+                        -bottom.x,
+                        -bottom.y,
+                        -bottom.z
+                    )
+                val tempCoordinates = transformThreeDCoordinates(movedInput, matrix)
+                translateThreeDCoordinates(tempCoordinates, bottom.x, bottom.y, bottom.z)
+            }
+            RotationType.FRONT -> {
+                val front = frontOrBackOfThreeDCoordinates(threeDCoordinatesList, true)
+                val movedInput =
+                    translateThreeDCoordinates(threeDCoordinatesList, -front.x, -front.y, -front.z)
+                val tempCoordinates = transformThreeDCoordinates(movedInput, matrix)
+                translateThreeDCoordinates(tempCoordinates, front.x, front.y, front.z)
+            }
+            RotationType.BACK -> {
+                val back = frontOrBackOfThreeDCoordinates(threeDCoordinatesList, false)
+                val movedInput =
+                    translateThreeDCoordinates(
+                        threeDCoordinatesList,
+                        -back.x,
+                        -back.y,
+                        -back.z
+                    )
+                val tempCoordinates = transformThreeDCoordinates(movedInput, matrix)
+                translateThreeDCoordinates(tempCoordinates, back.x, back.y, back.z)
+            }
+            RotationType.REFERENCE -> {
+                val referencePoint = reference ?: ThreeDCoordinatesModel(0.0, 0.0, 0.0, 1.0)
+                val movedInput =
+                    translateThreeDCoordinates(
+                        threeDCoordinatesList,
+                        -referencePoint.x,
+                        -referencePoint.y,
+                        -referencePoint.z
+                    )
+                val tempCoordinates = transformThreeDCoordinates(movedInput, matrix)
+                translateThreeDCoordinates(
+                    tempCoordinates,
+                    referencePoint.x,
+                    referencePoint.y,
+                    referencePoint.z
+                )
+            }
+            RotationType.NONE -> {
+                transformThreeDCoordinates(threeDCoordinatesList, matrix)
+            }
         }
-        return resultList
     }
 
     fun orthogonalProjectThreeDCoordinates(
@@ -483,8 +647,8 @@ object GraphicUtils {
         val resultList = mutableListOf<ThreeDCoordinatesModel>()
         val matrix = getIdentityMatrix()
         val aspectRatio = (right - left) / (top - bottom)
-        matrix[0] = 1.0 / (aspectRatio * tan(fieldOfView/2))
-        matrix[5] = 1.0 / tan(fieldOfView/2)
+        matrix[0] = 1.0 / (aspectRatio * tan(fieldOfView / 2))
+        matrix[5] = 1.0 / tan(fieldOfView / 2)
         matrix[10] = -(far + near) / (far - near)
         matrix[11] = -(2 * far * near) / (far - near)
         matrix[14] = -1.0
@@ -495,6 +659,28 @@ object GraphicUtils {
             resultList.add(newCoordinate)
         }
         return resultList
+    }
+
+    fun drawLinePairs(
+        canvas: Canvas,
+        coordinateList: List<ThreeDCoordinatesModel>,
+        start: Int,
+        end: Int,
+        paint: Paint
+    ) {
+        if (coordinateList.size > end) {
+            canvas.drawLine(
+                coordinateList[start].x.toFloat(),
+                coordinateList[start].y.toFloat(),
+                coordinateList[end].x.toFloat(),
+                coordinateList[end].y.toFloat(),
+                paint
+            )
+        }
+    }
+
+    enum class RotationType {
+        CENTER, START, END, TOP, BOTTOM, FRONT, BACK, REFERENCE, NONE
     }
 
 }

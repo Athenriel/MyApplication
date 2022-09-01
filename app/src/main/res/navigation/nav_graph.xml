@@ -105,6 +105,13 @@
             app:exitAnim="@anim/slide_down"
             app:popEnterAnim="@anim/slide_up"
             app:popExitAnim="@anim/slide_down" />
+        <action
+            android:id="@+id/action_GraphicsFragment_to_DanceFragment"
+            app:destination="@id/DanceFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down"
+            app:popEnterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down" />
     </fragment>
 
     <fragment
@@ -124,5 +131,11 @@
         android:name="com.example.myapplication.ui.graphics.ThreeDCubeFragment"
         android:label="@string/three_d_cube_title"
         tools:layout="@layout/fragment_three_d" />
+
+    <fragment
+        android:id="@+id/DanceFragment"
+        android:name="com.example.myapplication.ui.graphics.DanceFragment"
+        android:label="@string/dance_title"
+        tools:layout="@layout/fragment_dance" />
 
 </navigation>

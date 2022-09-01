@@ -57,7 +57,8 @@ class ThreeDCubeFragment : BaseFragment<FragmentThreeDBinding>(FragmentThreeDBin
                     angle,
                     0.0,
                     1.0,
-                    1.0
+                    1.0,
+                    GraphicUtils.RotationType.NONE
                 )
                 rotatedThreeDCoordinatesList = GraphicUtils.translateThreeDCoordinates(
                     rotatedThreeDCoordinatesList,
