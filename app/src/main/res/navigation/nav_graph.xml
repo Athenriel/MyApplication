@@ -112,6 +112,13 @@
             app:exitAnim="@anim/slide_down"
             app:popEnterAnim="@anim/slide_up"
             app:popExitAnim="@anim/slide_down" />
+        <action
+            android:id="@+id/action_GraphicsFragment_to_OpenGLTriangleFragment"
+            app:destination="@id/OpenGLTriangleFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down"
+            app:popEnterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down" />
     </fragment>
 
     <fragment
@@ -137,5 +144,11 @@
         android:name="com.example.myapplication.ui.graphics.DanceFragment"
         android:label="@string/dance_title"
         tools:layout="@layout/fragment_dance" />
+
+    <fragment
+        android:id="@+id/OpenGLTriangleFragment"
+        android:name="com.example.myapplication.ui.graphics.OpenGLTriangleFragment"
+        android:label="@string/opengl_triangle_title"
+        tools:layout="@layout/fragment_opengl_triangle" />
 
 </navigation>
