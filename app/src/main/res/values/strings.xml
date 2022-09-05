@@ -56,6 +56,7 @@
     <string name="polygons_title">Polygons</string>
     <string name="graphs_title">Graphs</string>
     <string name="three_d_cube_title">3D cube</string>
+    <string name="dance_title">Dance</string>
 
     <!-- errors -->
     <string name="error_title">Error</string>
