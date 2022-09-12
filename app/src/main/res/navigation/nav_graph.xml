@@ -119,6 +119,13 @@
             app:exitAnim="@anim/slide_down"
             app:popEnterAnim="@anim/slide_up"
             app:popExitAnim="@anim/slide_down" />
+        <action
+            android:id="@+id/action_GraphicsFragment_to_OpenGLEllipseFragment"
+            app:destination="@id/OpenGLEllipseFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down"
+            app:popEnterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down" />
     </fragment>
 
     <fragment
@@ -150,5 +157,11 @@
         android:name="com.example.myapplication.ui.graphics.OpenGLTriangleFragment"
         android:label="@string/opengl_triangle_title"
         tools:layout="@layout/fragment_opengl_triangle" />
+
+    <fragment
+        android:id="@+id/OpenGLEllipseFragment"
+        android:name="com.example.myapplication.ui.graphics.OpenGLEllipseFragment"
+        android:label="@string/opengl_ellipse_title"
+        tools:layout="@layout/fragment_opengl_ellipse" />
 
 </navigation>

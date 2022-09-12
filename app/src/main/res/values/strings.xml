@@ -58,6 +58,7 @@
     <string name="three_d_cube_title">3D cube</string>
     <string name="dance_title">Dance</string>
     <string name="opengl_triangle_title">OpenGL Triangle</string>
+    <string name="opengl_ellipse_title">OpenGL Ellipse</string>
 
     <!-- errors -->
     <string name="error_title">Error</string>
