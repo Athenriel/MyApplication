@@ -126,6 +126,27 @@
             app:exitAnim="@anim/slide_down"
             app:popEnterAnim="@anim/slide_up"
             app:popExitAnim="@anim/slide_down" />
+        <action
+            android:id="@+id/action_GraphicsFragment_to_OpenGLPyramidFragment"
+            app:destination="@id/OpenGLPyramidFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down"
+            app:popEnterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down" />
+        <action
+            android:id="@+id/action_GraphicsFragment_to_OpenGLCubeFragment"
+            app:destination="@id/OpenGLCubeFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down"
+            app:popEnterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down" />
+        <action
+            android:id="@+id/action_GraphicsFragment_to_OpenGLPentagonPrismFragment"
+            app:destination="@id/OpenGLPentagonPrismFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down"
+            app:popEnterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down" />
     </fragment>
 
     <fragment
@@ -163,5 +184,23 @@
         android:name="com.example.myapplication.ui.graphics.OpenGLEllipseFragment"
         android:label="@string/opengl_ellipse_title"
         tools:layout="@layout/fragment_opengl_ellipse" />
+
+    <fragment
+        android:id="@+id/OpenGLPyramidFragment"
+        android:name="com.example.myapplication.ui.graphics.OpenGLPyramidFragment"
+        android:label="@string/opengl_pyramid_title"
+        tools:layout="@layout/fragment_opengl_pyramid" />
+
+    <fragment
+        android:id="@+id/OpenGLCubeFragment"
+        android:name="com.example.myapplication.ui.graphics.OpenGLCubeFragment"
+        android:label="@string/opengl_cube_title"
+        tools:layout="@layout/fragment_opengl_cube" />
+
+    <fragment
+        android:id="@+id/OpenGLPentagonPrismFragment"
+        android:name="com.example.myapplication.ui.graphics.OpenGLPentagonPrismFragment"
+        android:label="@string/opengl_pentagon_prism_title"
+        tools:layout="@layout/fragment_opengl_pentagon_prism" />
 
 </navigation>
