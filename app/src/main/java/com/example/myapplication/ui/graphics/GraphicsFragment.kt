@@ -29,6 +29,10 @@ class GraphicsFragment : BaseFragment<FragmentGraphicsBinding>(FragmentGraphicsB
             val directions = GraphicsFragmentDirections.actionGraphicsFragmentToDanceFragment()
             findNavController().navigate(directions)
         }
+        binding.graphicsFifthBtn.setOnClickListener {
+            val directions = GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLTriangleFragment()
+            findNavController().navigate(directions)
+        }
     }
 
 }
