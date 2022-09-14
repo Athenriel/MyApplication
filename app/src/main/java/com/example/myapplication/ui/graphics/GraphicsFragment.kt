@@ -30,7 +30,28 @@ class GraphicsFragment : BaseFragment<FragmentGraphicsBinding>(FragmentGraphicsB
             findNavController().navigate(directions)
         }
         binding.graphicsFifthBtn.setOnClickListener {
-            val directions = GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLTriangleFragment()
+            val directions =
+                GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLTriangleFragment()
+            findNavController().navigate(directions)
+        }
+        binding.graphicsSixthBtn.setOnClickListener {
+            val directions =
+                GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLEllipseFragment()
+            findNavController().navigate(directions)
+        }
+        binding.graphicsSeventhBtn.setOnClickListener {
+            val directions =
+                GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLPyramidFragment()
+            findNavController().navigate(directions)
+        }
+        binding.graphicsEightBtn.setOnClickListener {
+            val directions =
+                GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLCubeFragment()
+            findNavController().navigate(directions)
+        }
+        binding.graphicsNinthBtn.setOnClickListener {
+            val directions =
+                GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLPentagonPrismFragment()
             findNavController().navigate(directions)
         }
     }
