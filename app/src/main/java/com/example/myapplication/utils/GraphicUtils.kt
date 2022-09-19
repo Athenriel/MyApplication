@@ -1,10 +1,8 @@
 package com.example.myapplication.utils
 
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Path
-import android.graphics.Point
+import android.graphics.*
 import com.example.myapplication.model.ThreeDCoordinatesModel
+import com.example.myapplication.model.ThreeDFloatsModel
 import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.sin
@@ -213,6 +211,99 @@ object GraphicUtils {
         } else {
             affineTransformation(input, matrix)
         }
+    }
+
+    fun centerOfPointFs(input: List<PointF>): PointF {
+        var sumX = 0f
+        var sumY = 0f
+        for (point in input) {
+            sumX += point.x
+            sumY += point.y
+        }
+        return PointF((sumX / input.size), sumY / input.size)
+    }
+
+    fun getBezierCurveVertices(z: Float, bezierPointFList: List<PointF>): ArrayList<ThreeDFloatsModel> {
+        val tValues = listOf(
+            0f,
+            0.1f,
+            0.2f,
+            0.3f,
+            0.4f,
+            0.5f,
+            0.6f,
+            0.7f,
+            0.8f,
+            0.9f,
+            1f
+        )
+        val bezierVertices = arrayListOf<ThreeDFloatsModel>()
+        if (bezierPointFList.size >= 4) {
+            for (t in tValues) {
+                val x = (1 - t).pow(3) * bezierPointFList[0].x +
+                        bezierPointFList[1].x * 3 * t * (1 - t).pow(2) +
+                        bezierPointFList[2].x * 3 * t.pow(2) * (1 - t) +
+                        bezierPointFList[3].x * t.pow(3)
+                val y = (1 - t).pow(3) * bezierPointFList[0].y +
+                        bezierPointFList[1].y * 3 * t * (1 - t).pow(2) +
+                        bezierPointFList[2].y * 3 * t.pow(2) * (1 - t) +
+                        bezierPointFList[3].y * t.pow(3)
+                bezierVertices.add(ThreeDFloatsModel(x, y, z))
+            }
+        }
+        return bezierVertices
+    }
+
+    fun getVerticesForSphere(
+        radius: Float,
+        latitudes: Int,
+        longitudes: Int,
+        dist: Float
+    ): ArrayList<ThreeDFloatsModel> {
+        val vertices = arrayListOf<ThreeDFloatsModel>()
+        for (i in 0..latitudes) {
+            val theta = i * Math.PI / latitudes
+            val sinTheta = sin(theta)
+            val cosTheta = cos(theta)
+            for (j in 0..longitudes) {
+                val phi = j * 2 * Math.PI / longitudes
+                val sinPhi = sin(phi)
+                val cosPhi = cos(phi)
+                val x = cosPhi * sinTheta
+                val y = cosTheta
+                val z = sinPhi * sinTheta
+                vertices.add(
+                    ThreeDFloatsModel(
+                        radius * x.toFloat(),
+                        radius * y.toFloat() + dist,
+                        radius * z.toFloat()
+                    )
+                )
+            }
+        }
+        return vertices
+    }
+
+    fun getTrianglesIndexesForSphere(
+        latitudes: Int,
+        longitudes: Int
+    ): ArrayList<Int> {
+        val indexesList = arrayListOf<Int>()
+        for (i in 0 until latitudes) {
+            for (j in 0 until longitudes) {
+                val p0 = i * (longitudes + 1) + j
+                val p1 = p0 + longitudes + 1
+
+                indexesList.add(p0)
+                indexesList.add(p1)
+                indexesList.add(p0 + 1)
+
+                indexesList.add(p1)
+                indexesList.add(p1 + 1)
+                indexesList.add(p0 + 1)
+            }
+        }
+        return indexesList
     }
 
     private fun getIdentityMatrix(): MutableList<Double> {

@@ -62,6 +62,11 @@
     <string name="opengl_pyramid_title">OpenGL Pyramid</string>
     <string name="opengl_cube_title">OpenGL Cube</string>
     <string name="opengl_pentagon_prism_title">OpenGL Pentagon Prism</string>
+    <string name="opengl_letter_a_title">OpenGL Letter A</string>
+    <string name="opengl_letter_s_title">OpenGL Letter S</string>
+    <string name="opengl_letter_v_title">OpenGL Letter V</string>
+    <string name="opengl_sphere_title">OpenGL Sphere</string>
+    <string name="opengl_half_cone_title">OpenGL Half Cone</string>
 
     <!-- errors -->
     <string name="error_title">Error</string>

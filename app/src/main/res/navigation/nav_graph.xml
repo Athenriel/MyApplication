@@ -147,6 +147,41 @@
             app:exitAnim="@anim/slide_down"
             app:popEnterAnim="@anim/slide_up"
             app:popExitAnim="@anim/slide_down" />
+        <action
+            android:id="@+id/action_GraphicsFragment_to_OpenGLLetterAFragment"
+            app:destination="@id/OpenGLLetterAFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down"
+            app:popEnterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down" />
+        <action
+            android:id="@+id/action_GraphicsFragment_to_OpenGLLetterSFragment"
+            app:destination="@id/OpenGLLetterSFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down"
+            app:popEnterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down" />
+        <action
+            android:id="@+id/action_GraphicsFragment_to_OpenGLLetterVFragment"
+            app:destination="@id/OpenGLLetterVFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down"
+            app:popEnterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down" />
+        <action
+            android:id="@+id/action_GraphicsFragment_to_OpenGLSphereFragment"
+            app:destination="@id/OpenGLSphereFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down"
+            app:popEnterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down" />
+        <action
+            android:id="@+id/action_GraphicsFragment_to_OpenGLHalfConeFragment"
+            app:destination="@id/OpenGLHalfConeFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down"
+            app:popEnterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down" />
     </fragment>
 
     <fragment
@@ -202,5 +237,35 @@
         android:name="com.example.myapplication.ui.graphics.OpenGLPentagonPrismFragment"
         android:label="@string/opengl_pentagon_prism_title"
         tools:layout="@layout/fragment_opengl_pentagon_prism" />
+
+    <fragment
+        android:id="@+id/OpenGLLetterAFragment"
+        android:name="com.example.myapplication.ui.graphics.OpenGLLetterAFragment"
+        android:label="@string/opengl_letter_a_title"
+        tools:layout="@layout/fragment_opengl_letter_a" />
+
+    <fragment
+        android:id="@+id/OpenGLLetterSFragment"
+        android:name="com.example.myapplication.ui.graphics.OpenGLLetterSFragment"
+        android:label="@string/opengl_letter_s_title"
+        tools:layout="@layout/fragment_opengl_letter_s" />
+
+    <fragment
+        android:id="@+id/OpenGLLetterVFragment"
+        android:name="com.example.myapplication.ui.graphics.OpenGLLetterVFragment"
+        android:label="@string/opengl_letter_v_title"
+        tools:layout="@layout/fragment_opengl_letter_v" />
+
+    <fragment
+        android:id="@+id/OpenGLSphereFragment"
+        android:name="com.example.myapplication.ui.graphics.OpenGLSphereFragment"
+        android:label="@string/opengl_sphere_title"
+        tools:layout="@layout/fragment_opengl_sphere" />
+
+    <fragment
+        android:id="@+id/OpenGLHalfConeFragment"
+        android:name="com.example.myapplication.ui.graphics.OpenGLHalfConeFragment"
+        android:label="@string/opengl_half_cone_title"
+        tools:layout="@layout/fragment_opengl_half_cone" />
 
 </navigation>
