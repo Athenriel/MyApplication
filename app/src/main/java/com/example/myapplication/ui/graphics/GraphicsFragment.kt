@@ -13,6 +13,12 @@ class GraphicsFragment : BaseFragment<FragmentGraphicsBinding>(FragmentGraphicsB
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.graphicsButtonsScrollView.apply {
+            isVerticalScrollBarEnabled = true
+            isScrollbarFadingEnabled = false
+        }
+
         binding.graphicsFirstBtn.setOnClickListener {
             val directions = GraphicsFragmentDirections.actionGraphicsFragmentToPolygonsFragment()
             findNavController().navigate(directions)
@@ -52,6 +58,31 @@ class GraphicsFragment : BaseFragment<FragmentGraphicsBinding>(FragmentGraphicsB
         binding.graphicsNinthBtn.setOnClickListener {
             val directions =
                 GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLPentagonPrismFragment()
+            findNavController().navigate(directions)
+        }
+        binding.graphicsTenthBtn.setOnClickListener {
+            val directions =
+                GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLLetterAFragment()
+            findNavController().navigate(directions)
+        }
+        binding.graphicsEleventhBtn.setOnClickListener {
+            val directions =
+                GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLLetterSFragment()
+            findNavController().navigate(directions)
+        }
+        binding.graphicsTwelfthBtn.setOnClickListener {
+            val directions =
+                GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLLetterVFragment()
+            findNavController().navigate(directions)
+        }
+        binding.graphicsThirteenthBtn.setOnClickListener {
+            val directions =
+                GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLSphereFragment()
+            findNavController().navigate(directions)
+        }
+        binding.graphicsFourteenthBtn.setOnClickListener {
+            val directions =
+                GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLHalfConeFragment()
             findNavController().navigate(directions)
         }
     }
