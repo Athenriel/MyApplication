@@ -67,6 +67,8 @@
     <string name="opengl_letter_v_title">OpenGL Letter V</string>
     <string name="opengl_sphere_title">OpenGL Sphere</string>
     <string name="opengl_half_cone_title">OpenGL Half Cone</string>
+    <string name="opengl_imperial_title">OpenGL Imperial</string>
+    <string name="opengl_logo_title">OpenGL Logo</string>
 
     <!-- errors -->
     <string name="error_title">Error</string>

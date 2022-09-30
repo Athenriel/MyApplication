@@ -254,6 +254,19 @@ object GraphicUtils {
         return bezierVertices
     }
 
+    fun translateFloatArrayVertices(
+        array: FloatArray,
+        translateX: Float,
+        translateY: Float,
+        translateZ: Float
+    ) {
+        for (i in array.indices step 3) {
+            array[i]+= translateX
+            array[i+1]+= translateY
+            array[i+2]+= translateZ
+        }
+    }
+
     fun getVerticesForSphere(
         radius: Float,
         latitudes: Int,

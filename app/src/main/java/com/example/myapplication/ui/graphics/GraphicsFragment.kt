@@ -85,6 +85,16 @@ class GraphicsFragment : BaseFragment<FragmentGraphicsBinding>(FragmentGraphicsB
                 GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLHalfConeFragment()
             findNavController().navigate(directions)
         }
+        binding.graphicsFifteenthBtn.setOnClickListener {
+            val directions =
+                GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLImperialFragment()
+            findNavController().navigate(directions)
+        }
+        binding.graphicsSixteenthBtn.setOnClickListener {
+            val directions =
+                GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLLogoFragment()
+            findNavController().navigate(directions)
+        }
     }
 
 }
