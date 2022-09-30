@@ -88,7 +88,7 @@ class LetterVFrame(private val renderer: OpenGLLetterVRenderer) {
         5, 10, 11,
         //outer side 1
         0, 5, 11,
-        5, 11, 6
+        11, 6, 0
     )
 
     private val letterVColor = floatArrayOf(

@@ -18,4 +18,8 @@ class OpenGLView(context: Context, attrs: AttributeSet) : GLSurfaceView(context,
         renderMode = RENDERMODE_WHEN_DIRTY
     }
 
+    fun refresh() {
+        requestRender()
+    }
+
 }

@@ -182,6 +182,20 @@
             app:exitAnim="@anim/slide_down"
             app:popEnterAnim="@anim/slide_up"
             app:popExitAnim="@anim/slide_down" />
+        <action
+            android:id="@+id/action_GraphicsFragment_to_OpenGLImperialFragment"
+            app:destination="@id/OpenGLImperialFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down"
+            app:popEnterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down" />
+        <action
+            android:id="@+id/action_GraphicsFragment_to_OpenGLLogoFragment"
+            app:destination="@id/OpenGLLogoFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down"
+            app:popEnterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down" />
     </fragment>
 
     <fragment
@@ -267,5 +281,17 @@
         android:name="com.example.myapplication.ui.graphics.OpenGLHalfConeFragment"
         android:label="@string/opengl_half_cone_title"
         tools:layout="@layout/fragment_opengl_half_cone" />
+
+    <fragment
+        android:id="@+id/OpenGLImperialFragment"
+        android:name="com.example.myapplication.ui.graphics.OpenGLImperialFragment"
+        android:label="@string/opengl_imperial_title"
+        tools:layout="@layout/fragment_opengl_imperial" />
+
+    <fragment
+        android:id="@+id/OpenGLLogoFragment"
+        android:name="com.example.myapplication.ui.graphics.OpenGLLogoFragment"
+        android:label="@string/opengl_logo_title"
+        tools:layout="@layout/fragment_opengl_logo" />
 
 </navigation>
