@@ -9,6 +9,8 @@ import android.util.AttributeSet
  */
 class OpenGLView(context: Context, attrs: AttributeSet) : GLSurfaceView(context, attrs) {
 
+    private var scaleFactor = 0f
+
     init {
         setEGLContextClientVersion(2)
     }
@@ -16,6 +18,18 @@ class OpenGLView(context: Context, attrs: AttributeSet) : GLSurfaceView(context,
     override fun setRenderer(renderer: Renderer?) {
         super.setRenderer(renderer)
         renderMode = RENDERMODE_WHEN_DIRTY
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        scaleFactor = 0f
+        super.onSizeChanged(w, h, oldw, oldh)
+    }
+
+    fun getWidthScaleFactor(): Float {
+        if (scaleFactor == 0f) {
+            scaleFactor = 180f / width
+        }
+        return scaleFactor
     }
 
     fun refresh() {
