@@ -3,8 +3,11 @@ package com.example.myapplication.ui.graphics
 import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.findNavController
+import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentGraphicsBinding
+import com.example.myapplication.model.GraphicExampleModel
 import com.example.myapplication.ui.BaseFragment
+import com.example.myapplication.ui.graphics.adapter.GraphicExamplesAdapter
 
 /**
  * Created by Athenriel on 8/16/2022
@@ -14,87 +17,98 @@ class GraphicsFragment : BaseFragment<FragmentGraphicsBinding>(FragmentGraphicsB
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.graphicsButtonsScrollView.apply {
-            isVerticalScrollBarEnabled = true
-            isScrollbarFadingEnabled = false
+        val graphicExampleTitleList = listOf(
+            getString(R.string.polygons_title),                 //0
+            getString(R.string.graphs_title),                   //1
+            getString(R.string.three_d_cube_title),             //2
+            getString(R.string.dance_title),                    //3
+            getString(R.string.opengl_triangle_title),          //4
+            getString(R.string.opengl_ellipse_title),           //5
+            getString(R.string.opengl_pyramid_title),           //6
+            getString(R.string.opengl_cube_title),              //7
+            getString(R.string.opengl_pentagon_prism_title),    //8
+            getString(R.string.opengl_letter_a_title),          //9
+            getString(R.string.opengl_letter_s_title),          //10
+            getString(R.string.opengl_letter_v_title),          //11
+            getString(R.string.opengl_sphere_title),            //12
+            getString(R.string.opengl_half_cone_title),         //13
+            getString(R.string.opengl_imperial_title),          //14
+            getString(R.string.opengl_logo_title)               //15
+        )
+
+        val graphicExampleModelList = mutableListOf<GraphicExampleModel>()
+
+        for (title in graphicExampleTitleList.withIndex()) {
+            graphicExampleModelList.add(GraphicExampleModel(title.index, title.value))
         }
 
-        binding.graphicsFirstBtn.setOnClickListener {
-            val directions = GraphicsFragmentDirections.actionGraphicsFragmentToPolygonsFragment()
-            findNavController().navigate(directions)
-        }
-        binding.graphicsSecondBtn.setOnClickListener {
-            val directions = GraphicsFragmentDirections.actionGraphicsFragmentToGraphsFragment()
-            findNavController().navigate(directions)
-        }
-        binding.graphicsThirdBtn.setOnClickListener {
-            val directions = GraphicsFragmentDirections.actionGraphicsFragmentToThreeDCubeFragment()
-            findNavController().navigate(directions)
-        }
-        binding.graphicsFourthBtn.setOnClickListener {
-            val directions = GraphicsFragmentDirections.actionGraphicsFragmentToDanceFragment()
-            findNavController().navigate(directions)
-        }
-        binding.graphicsFifthBtn.setOnClickListener {
-            val directions =
+        val graphicExamplesAdapter = GraphicExamplesAdapter(
+            graphicExampleModelList,
+            object : GraphicExamplesAdapter.GraphicExampleListener {
+                override fun onGraphicExampleClick(id: Int) {
+                    navigateToGraphicExample(id)
+                }
+            }
+        )
+
+        binding.graphicsExamplesRecyclerView.adapter = graphicExamplesAdapter
+    }
+
+    private fun navigateToGraphicExample(id: Int) {
+        val directions = when (id) {
+            0 -> {
+                GraphicsFragmentDirections.actionGraphicsFragmentToPolygonsFragment()
+            }
+            1 -> {
+                GraphicsFragmentDirections.actionGraphicsFragmentToGraphsFragment()
+            }
+            2 -> {
+                GraphicsFragmentDirections.actionGraphicsFragmentToThreeDCubeFragment()
+            }
+            3 -> {
+                GraphicsFragmentDirections.actionGraphicsFragmentToDanceFragment()
+            }
+            4 -> {
                 GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLTriangleFragment()
-            findNavController().navigate(directions)
-        }
-        binding.graphicsSixthBtn.setOnClickListener {
-            val directions =
+            }
+            5 -> {
                 GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLEllipseFragment()
-            findNavController().navigate(directions)
-        }
-        binding.graphicsSeventhBtn.setOnClickListener {
-            val directions =
+            }
+            6 -> {
                 GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLPyramidFragment()
-            findNavController().navigate(directions)
-        }
-        binding.graphicsEightBtn.setOnClickListener {
-            val directions =
+            }
+            7 -> {
                 GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLCubeFragment()
-            findNavController().navigate(directions)
-        }
-        binding.graphicsNinthBtn.setOnClickListener {
-            val directions =
+            }
+            8 -> {
                 GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLPentagonPrismFragment()
-            findNavController().navigate(directions)
-        }
-        binding.graphicsTenthBtn.setOnClickListener {
-            val directions =
+            }
+            9 -> {
                 GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLLetterAFragment()
-            findNavController().navigate(directions)
-        }
-        binding.graphicsEleventhBtn.setOnClickListener {
-            val directions =
+            }
+            10 -> {
                 GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLLetterSFragment()
-            findNavController().navigate(directions)
-        }
-        binding.graphicsTwelfthBtn.setOnClickListener {
-            val directions =
+            }
+            11 -> {
                 GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLLetterVFragment()
-            findNavController().navigate(directions)
-        }
-        binding.graphicsThirteenthBtn.setOnClickListener {
-            val directions =
+            }
+            12 -> {
                 GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLSphereFragment()
-            findNavController().navigate(directions)
-        }
-        binding.graphicsFourteenthBtn.setOnClickListener {
-            val directions =
+            }
+            13 -> {
                 GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLHalfConeFragment()
-            findNavController().navigate(directions)
-        }
-        binding.graphicsFifteenthBtn.setOnClickListener {
-            val directions =
+            }
+            14 -> {
                 GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLImperialFragment()
-            findNavController().navigate(directions)
-        }
-        binding.graphicsSixteenthBtn.setOnClickListener {
-            val directions =
+            }
+            15 -> {
                 GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLLogoFragment()
-            findNavController().navigate(directions)
+            }
+            else -> {
+                GraphicsFragmentDirections.actionGraphicsFragmentToPolygonsFragment()
+            }
         }
+        findNavController().navigate(directions)
     }
 
 }
