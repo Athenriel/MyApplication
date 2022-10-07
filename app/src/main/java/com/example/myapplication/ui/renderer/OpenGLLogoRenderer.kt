@@ -3,9 +3,10 @@ package com.example.myapplication.ui.renderer
 import android.opengl.GLES32
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
+import com.example.myapplication.interfaces.RenderTouchRotationListener
 import com.example.myapplication.model.ModelMatrixRotationModel
 import com.example.myapplication.model.RotationModel
-import com.example.myapplication.ui.frame.ImperialFrame
+import com.example.myapplication.model.TouchRotationModel
 import com.example.myapplication.ui.frame.LogoFrame
 import timber.log.Timber
 import javax.microedition.khronos.egl.EGLConfig
@@ -14,7 +15,7 @@ import javax.microedition.khronos.opengles.GL10
 /**
  * Created by Athenriel on 9/30/2022
  */
-class OpenGLLogoRenderer : GLSurfaceView.Renderer {
+class OpenGLLogoRenderer : GLSurfaceView.Renderer, RenderTouchRotationListener {
 
     private val mMVPMatrix = FloatArray(16) //model view projection matrix
     private val mProjectionMatrix = FloatArray(16) //projection matrix
@@ -23,6 +24,7 @@ class OpenGLLogoRenderer : GLSurfaceView.Renderer {
     private val mModelMatrix = FloatArray(16) //model  matrix
     private var mLogo: LogoFrame? = null
     private var rotationModel: RotationModel? = null
+    private var touchRotationModel: TouchRotationModel? = null
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         // Set the background frame color to black
@@ -62,9 +64,14 @@ class OpenGLLogoRenderer : GLSurfaceView.Renderer {
 
         Matrix.translateM(mModelMatrix, 0, 0.0f, 0.0f, -30f) //move backward for 30 units
 
-        rotationModel?.let { rotationModelSafe ->
-            val modelMatrixRotationModel = ModelMatrixRotationModel(rotationModelSafe)
-            modelMatrixRotationModel.rotateMatrix(mModelMatrix)
+        touchRotationModel?.let { touchRotationModelSafe ->
+            ModelMatrixRotationModel(RotationModel(touchRotationModelSafe.angleY, x = false, y = true, z = false)).rotateMatrix(mModelMatrix)
+            ModelMatrixRotationModel(RotationModel(touchRotationModelSafe.angleX, x = true, y = false, z = false)).rotateMatrix(mModelMatrix)
+        } ?: run {
+            rotationModel?.let { rotationModelSafe ->
+                val modelMatrixRotationModel = ModelMatrixRotationModel(rotationModelSafe)
+                modelMatrixRotationModel.rotateMatrix(mModelMatrix)
+            }
         }
 
         // Calculate the projection and view transformation
@@ -95,6 +102,14 @@ class OpenGLLogoRenderer : GLSurfaceView.Renderer {
 
     fun setRotationModel(newRotationModel: RotationModel) {
         rotationModel = newRotationModel
+    }
+
+    override fun setTouchRotationModel(newTouchRotationModel: TouchRotationModel?) {
+        touchRotationModel = newTouchRotationModel
+    }
+
+    override fun getTouchRotationModel(): TouchRotationModel? {
+        return touchRotationModel
     }
 
 }

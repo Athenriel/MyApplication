@@ -38,20 +38,28 @@ class LogoFrame(private val renderer: OpenGLLogoRenderer) {
     private var mPositionHandle = 0
     private var mMVPMatrixHandle = 0
     private var mColorHandle = 0
+    private var mPointLightingLocationHandle = 0
+    private val lightLocation = floatArrayOf(0f, 0f, 0f)
 
     companion object {
         private const val VERTEX_SHADER_CODE = "attribute vec3 aVertexPosition;" +
                 "attribute vec4 aVertexColor;" +
                 "uniform mat4 uMVPMatrix;" +
                 "varying vec4 vColor;" +
+                "uniform vec3 uPointLightingLocation;" +
+                "varying float vPointLightWeighting;" +
                 "void main() {" +
                 "gl_Position = uMVPMatrix * vec4(aVertexPosition, 1.0);" +
                 "vColor=aVertexColor;" +
+                "vec4 mvPosition = uMVPMatrix * vec4(aVertexPosition, 1.0);" +
+                "float dist_from_light = distance(uPointLightingLocation, mvPosition.xyz);" +
+                "vPointLightWeighting = 1000.0 / (dist_from_light * dist_from_light);" +
                 "}"
         private const val FRAGMENT_SHADER_CODE = "precision mediump float;" +
                 "varying vec4 vColor;" +
+                "varying float vPointLightWeighting;" +
                 "void main() {" +
-                "gl_FragColor = vColor;" +
+                "gl_FragColor = vec4(vColor.xyz * vPointLightWeighting, 1);" +
                 "}"
         private const val COORDINATES_PER_VERTEX =
             3 // number of coordinates per vertex in this array
@@ -922,6 +930,13 @@ class LogoFrame(private val renderer: OpenGLLogoRenderer) {
         GLES32.glEnableVertexAttribArray(mPositionHandle)
         // get handle to shape's transformation matrix
         mMVPMatrixHandle = GLES32.glGetUniformLocation(mProgram, "uMVPMatrix")
+
+        lightLocation[0] = 8f
+        lightLocation[1] = 8f
+        lightLocation[2] = 0f
+        // get handle to vertex shader's uPointLightingLocation member
+        mPointLightingLocationHandle = GLES32.glGetUniformLocation(mProgram, "uPointLightingLocation")
+
         renderer.checkGlError("glGetUniformLocation")
     }
 
@@ -929,6 +944,9 @@ class LogoFrame(private val renderer: OpenGLLogoRenderer) {
         // Apply the projection and view transformation
         GLES32.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0)
         renderer.checkGlError("glUniformMatrix4fv")
+
+        //set the location of the point light source
+        GLES32.glUniform3fv(mPointLightingLocationHandle, 1, lightLocation, 0)
 
         //M
         //set the attribute of the vertex to point to the vertex buffer
