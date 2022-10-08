@@ -69,6 +69,7 @@
     <string name="opengl_half_cone_title">OpenGL Half Cone</string>
     <string name="opengl_imperial_title">OpenGL Imperial</string>
     <string name="opengl_logo_title">OpenGL Logo</string>
+    <string name="opengl_logo_diffuse_light_title">OpenGL Logo Diffuse Light</string>
 
     <!-- errors -->
     <string name="error_title">Error</string>

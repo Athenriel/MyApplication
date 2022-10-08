@@ -18,22 +18,23 @@ class GraphicsFragment : BaseFragment<FragmentGraphicsBinding>(FragmentGraphicsB
         super.onViewCreated(view, savedInstanceState)
 
         val graphicExampleTitleList = listOf(
-            getString(R.string.polygons_title),                 //0
-            getString(R.string.graphs_title),                   //1
-            getString(R.string.three_d_cube_title),             //2
-            getString(R.string.dance_title),                    //3
-            getString(R.string.opengl_triangle_title),          //4
-            getString(R.string.opengl_ellipse_title),           //5
-            getString(R.string.opengl_pyramid_title),           //6
-            getString(R.string.opengl_cube_title),              //7
-            getString(R.string.opengl_pentagon_prism_title),    //8
-            getString(R.string.opengl_letter_a_title),          //9
-            getString(R.string.opengl_letter_s_title),          //10
-            getString(R.string.opengl_letter_v_title),          //11
-            getString(R.string.opengl_sphere_title),            //12
-            getString(R.string.opengl_half_cone_title),         //13
-            getString(R.string.opengl_imperial_title),          //14
-            getString(R.string.opengl_logo_title)               //15
+            getString(R.string.polygons_title),                     //0
+            getString(R.string.graphs_title),                       //1
+            getString(R.string.three_d_cube_title),                 //2
+            getString(R.string.dance_title),                        //3
+            getString(R.string.opengl_triangle_title),              //4
+            getString(R.string.opengl_ellipse_title),               //5
+            getString(R.string.opengl_pyramid_title),               //6
+            getString(R.string.opengl_cube_title),                  //7
+            getString(R.string.opengl_pentagon_prism_title),        //8
+            getString(R.string.opengl_letter_a_title),              //9
+            getString(R.string.opengl_letter_s_title),              //10
+            getString(R.string.opengl_letter_v_title),              //11
+            getString(R.string.opengl_sphere_title),                //12
+            getString(R.string.opengl_half_cone_title),             //13
+            getString(R.string.opengl_imperial_title),              //14
+            getString(R.string.opengl_logo_title),                  //15
+            getString(R.string.opengl_logo_diffuse_light_title)     //16
         )
 
         val graphicExampleModelList = mutableListOf<GraphicExampleModel>()
@@ -103,6 +104,9 @@ class GraphicsFragment : BaseFragment<FragmentGraphicsBinding>(FragmentGraphicsB
             }
             15 -> {
                 GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLLogoFragment()
+            }
+            16 -> {
+                GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLLogoDiffuseLightFragment()
             }
             else -> {
                 GraphicsFragmentDirections.actionGraphicsFragmentToPolygonsFragment()
