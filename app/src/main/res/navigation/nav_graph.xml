@@ -196,6 +196,13 @@
             app:exitAnim="@anim/slide_down"
             app:popEnterAnim="@anim/slide_up"
             app:popExitAnim="@anim/slide_down" />
+        <action
+            android:id="@+id/action_GraphicsFragment_to_OpenGLLogoDiffuseLightFragment"
+            app:destination="@id/OpenGLLogoDiffuseLightFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down"
+            app:popEnterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down" />
     </fragment>
 
     <fragment
@@ -293,5 +300,11 @@
         android:name="com.example.myapplication.ui.graphics.OpenGLLogoFragment"
         android:label="@string/opengl_logo_title"
         tools:layout="@layout/fragment_opengl_logo" />
+
+    <fragment
+        android:id="@+id/OpenGLLogoDiffuseLightFragment"
+        android:name="com.example.myapplication.ui.graphics.OpenGLLogoDiffuseLightFragment"
+        android:label="@string/opengl_logo_diffuse_light_title"
+        tools:layout="@layout/fragment_opengl_logo_diffuse_light" />
 
 </navigation>

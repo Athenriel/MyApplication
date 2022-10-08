@@ -1,7 +1,7 @@
 package com.example.myapplication.ui.frame
 
 import android.opengl.GLES32
-import com.example.myapplication.ui.renderer.OpenGLLogoRenderer
+import com.example.myapplication.ui.renderer.OpenGLLogoDiffuseLightRenderer
 import com.example.myapplication.utils.GraphicUtils
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -10,56 +10,99 @@ import java.nio.IntBuffer
 import kotlin.math.abs
 
 /**
- * Created by Athenriel on 9/30/2022
+ * Created by Athenriel on 10/07/2022
  */
-class LogoFrame(private val renderer: OpenGLLogoRenderer) {
+class LogoDiffuseLightFrame(private val renderer: OpenGLLogoDiffuseLightRenderer) {
 
     private var indexMBuffer: IntBuffer? = null
     private var vertexMBuffer: FloatBuffer? = null
     private var colorMBuffer: FloatBuffer? = null
+    private var normalMBuffer: FloatBuffer? = null
 
     private var indexEBuffer: IntBuffer? = null
     private var vertexEBuffer: FloatBuffer? = null
     private var colorEBuffer: FloatBuffer? = null
+    private var normalEBuffer: FloatBuffer? = null
 
     private var indexRBuffer: IntBuffer? = null
     private var vertexRBuffer: FloatBuffer? = null
     private var colorRBuffer: FloatBuffer? = null
+    private var normalRBuffer: FloatBuffer? = null
 
     private var indexSphere1Buffer: IntBuffer? = null
     private var vertexSphere1Buffer: FloatBuffer? = null
     private var colorSphere1Buffer: FloatBuffer? = null
+    private var normalSphere1Buffer: FloatBuffer? = null
 
     private var indexSphere2Buffer: IntBuffer? = null
     private var vertexSphere2Buffer: FloatBuffer? = null
     private var colorSphere2Buffer: FloatBuffer? = null
+    private var normalSphere2Buffer: FloatBuffer? = null
 
     private var mProgram = 0
     private var mPositionHandle = 0
     private var mMVPMatrixHandle = 0
     private var mColorHandle = 0
-    private var mPointLightingLocationHandle = 0
+    private var mNormalHandle = 0
+    private var mLightLocationHandle = 0
+    private var mDiffuseColorHandle = 0
+    private var mAmbientColorHandle = 0
+    private var mSpecularColorHandle = 0
+    private var mMaterialShininessHandle = 0
+    private var mAttenuateHandle = 0
+
     private val lightLocation = floatArrayOf(0f, 0f, 0f)
+    private val diffuseColor = floatArrayOf(0f, 0f, 0f, 0f)
+    private val ambientColor = floatArrayOf(0f, 0f, 0f)
+    private val specularColor = floatArrayOf(0f, 0f, 0f, 0f)
+    private val attenuation = floatArrayOf(0f, 0f, 0f)
+    private val materialShininess = 10f
 
     companion object {
         private const val VERTEX_SHADER_CODE = "attribute vec3 aVertexPosition;" +
                 "attribute vec4 aVertexColor;" +
                 "uniform mat4 uMVPMatrix;" +
                 "varying vec4 vColor;" +
-                "uniform vec3 uPointLightingLocation;" +
-                "varying float vPointLightWeighting;" +
+                "attribute vec3 aVertexNormal;" +
+                "uniform vec3 uLightSourceLocation;" + //location of the light source (for diffuse and specular light)
+                "uniform vec4 uDiffuseColor;" +
+                "varying vec4 vDiffuseColor;" +
+                "varying float vDiffuseLightWeighting;" +
+                "uniform vec3 uAmbientColor;" +
+                "varying vec3 vAmbientColor;" +
+                "uniform vec4 uSpecularColor;" +
+                "varying vec4 vSpecularColor;" +
+                "varying float vSpecularLightWeighting;" +
+                "uniform float uMaterialShininess;" +
+                "uniform vec3 uAttenuation;" +
                 "void main() {" +
                 "gl_Position = uMVPMatrix * vec4(aVertexPosition, 1.0);" +
                 "vColor=aVertexColor;" +
                 "vec4 mvPosition = uMVPMatrix * vec4(aVertexPosition, 1.0);" +
-                "float dist_from_light = distance(uPointLightingLocation, mvPosition.xyz);" +
-                "vPointLightWeighting = 1000.0 / (dist_from_light * dist_from_light);" +
+                "vec3 lightDirection = normalize(uLightSourceLocation - mvPosition.xyz);" +
+                "vec3 transformedNormal = normalize((uMVPMatrix * vec4(aVertexNormal, 0.0)).xyz);" +
+                "vAmbientColor = uAmbientColor;" +
+                "vDiffuseColor = uDiffuseColor;" +
+                "vSpecularColor = uSpecularColor;" +
+                "vec3 eyeDirection = normalize(-mvPosition.xyz);" +
+                "vec3 reflectionDirection = reflect(-lightDirection, transformedNormal);" +
+                "vec3 vertexToLightSource = mvPosition.xyz - uLightSourceLocation;" +
+                "float diff_light_dist = length(vertexToLightSource);" +
+                "float attenuation = 1.0 / (uAttenuation.x + uAttenuation.y * diff_light_dist + uAttenuation.z * diff_light_dist * diff_light_dist);" +
+                "vDiffuseLightWeighting = attenuation * max(dot(transformedNormal, lightDirection), 0.0);" +
+                "vSpecularLightWeighting = attenuation * pow(max(dot(reflectionDirection, eyeDirection), 0.0), uMaterialShininess);" +
                 "}"
         private const val FRAGMENT_SHADER_CODE = "precision mediump float;" +
                 "varying vec4 vColor;" +
-                "varying float vPointLightWeighting;" +
+                "varying vec4 vDiffuseColor;" +
+                "varying float vDiffuseLightWeighting;" +
+                "varying vec3 vAmbientColor;" +
+                "varying vec4 vSpecularColor;" +
+                "varying float vSpecularLightWeighting;" +
                 "void main() {" +
-                "gl_FragColor = vec4(vColor.xyz * vPointLightWeighting, 1);" +
+                "vec4 diffuseColor = vDiffuseLightWeighting * vDiffuseColor;" +
+                "vec4 specularColor = vSpecularLightWeighting * vSpecularColor;" +
+                "gl_FragColor = vec4(vColor.xyz * vAmbientColor, 1) + specularColor + diffuseColor;" +
                 "}"
         private const val COORDINATES_PER_VERTEX =
             3 // number of coordinates per vertex in this array
@@ -811,6 +854,10 @@ class LogoFrame(private val renderer: OpenGLLogoRenderer) {
         vertexSphere1Buffer?.put(vertices1Array)
         vertexSphere1Buffer?.position(0)
 
+        normalSphere1Buffer = bb1.asFloatBuffer()
+        normalSphere1Buffer?.put(vertices1Array)
+        normalSphere1Buffer?.position(0)
+
         //initialize color byte buffer
         val cb1: ByteBuffer =
             ByteBuffer.allocateDirect(color1Array.size * 4) // (# of coordinate values * 4 bytes per float)
@@ -834,6 +881,10 @@ class LogoFrame(private val renderer: OpenGLLogoRenderer) {
         vertexSphere2Buffer?.put(vertices2Array)
         vertexSphere2Buffer?.position(0)
 
+        normalSphere2Buffer = bb2.asFloatBuffer()
+        normalSphere2Buffer?.put(vertices2Array)
+        normalSphere2Buffer?.position(0)
+
         //initialize color byte buffer
         val cb2: ByteBuffer =
             ByteBuffer.allocateDirect(color2Array.size * 4) // (# of coordinate values * 4 bytes per float)
@@ -854,6 +905,10 @@ class LogoFrame(private val renderer: OpenGLLogoRenderer) {
         vertexMBuffer = bb3.asFloatBuffer()
         vertexMBuffer?.put(letterMVertices)
         vertexMBuffer?.position(0)
+
+        normalMBuffer = bb3.asFloatBuffer()
+        normalMBuffer?.put(letterMVertices)
+        normalMBuffer?.position(0)
 
         //initialize color byte buffer
         val cb3: ByteBuffer =
@@ -876,6 +931,10 @@ class LogoFrame(private val renderer: OpenGLLogoRenderer) {
         vertexEBuffer?.put(letterEVertices)
         vertexEBuffer?.position(0)
 
+        normalEBuffer = bb4.asFloatBuffer()
+        normalEBuffer?.put(letterEVertices)
+        normalEBuffer?.position(0)
+
         //initialize color byte buffer
         val cb4: ByteBuffer =
             ByteBuffer.allocateDirect(letterEColor.size * 4) // (# of coordinate values * 4 bytes per float)
@@ -896,6 +955,10 @@ class LogoFrame(private val renderer: OpenGLLogoRenderer) {
         vertexRBuffer = bb5.asFloatBuffer()
         vertexRBuffer?.put(letterRVertices)
         vertexRBuffer?.position(0)
+
+        normalRBuffer = bb5.asFloatBuffer()
+        normalRBuffer?.put(letterRVertices)
+        normalRBuffer?.position(0)
 
         //initialize color byte buffer
         val cb5: ByteBuffer =
@@ -932,12 +995,38 @@ class LogoFrame(private val renderer: OpenGLLogoRenderer) {
         mMVPMatrixHandle = GLES32.glGetUniformLocation(mProgram, "uMVPMatrix")
         renderer.checkGlError("glGetUniformLocation")
 
+        mNormalHandle = GLES32.glGetAttribLocation(mProgram, "aVertexNormal")
+        GLES32.glEnableVertexAttribArray(mNormalHandle)
+        renderer.checkGlError("glVertexAttribPointer")
+
+        mLightLocationHandle = GLES32.glGetUniformLocation(mProgram, "uLightSourceLocation")
+        mDiffuseColorHandle = GLES32.glGetUniformLocation(mProgram, "uDiffuseColor")
+        mAmbientColorHandle = GLES32.glGetUniformLocation(mProgram, "uAmbientColor")
+        mSpecularColorHandle = GLES32.glGetUniformLocation(mProgram, "uSpecularColor")
+        mMaterialShininessHandle = GLES32.glGetUniformLocation(mProgram, "uMaterialShininess")
+        mAttenuateHandle = GLES32.glGetUniformLocation(mProgram, "uAttenuation")
+
         lightLocation[0] = 8f
         lightLocation[1] = 8f
         lightLocation[2] = 0f
-        // get handle to vertex shader's uPointLightingLocation member
-        mPointLightingLocationHandle = GLES32.glGetUniformLocation(mProgram, "uPointLightingLocation")
-        renderer.checkGlError("glGetUniformLocation")
+
+        diffuseColor[0] = 1f
+        diffuseColor[1] = 1f
+        diffuseColor[2] = 1f
+        diffuseColor[3] = 1f
+
+        ambientColor[0] = 0.6f
+        ambientColor[1] = 0.6f
+        ambientColor[2] = 0.6f
+
+        specularColor[0] = 1f
+        specularColor[1] = 1f
+        specularColor[2] = 1f
+        specularColor[3] = 1f
+
+        attenuation[0] = 1f
+        attenuation[1] = 0.14f
+        attenuation[2] = 0.07f
     }
 
     fun draw(mvpMatrix: FloatArray) {
@@ -945,14 +1034,22 @@ class LogoFrame(private val renderer: OpenGLLogoRenderer) {
         GLES32.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0)
         renderer.checkGlError("glUniformMatrix4fv")
 
-        //set the location of the point light source
-        GLES32.glUniform3fv(mPointLightingLocationHandle, 1, lightLocation, 0)
+        GLES32.glUniform3fv(mLightLocationHandle, 1, lightLocation, 0)
+        GLES32.glUniform4fv(mDiffuseColorHandle, 1, diffuseColor, 0)
+        GLES32.glUniform3fv(mAmbientColorHandle, 1, ambientColor, 0)
+        GLES32.glUniform4fv(mSpecularColorHandle, 1, specularColor, 0)
+        GLES32.glUniform1f(mMaterialShininessHandle, materialShininess)
+        GLES32.glUniform3fv(mAttenuateHandle, 1, attenuation, 0)
 
         //M
         //set the attribute of the vertex to point to the vertex buffer
         GLES32.glVertexAttribPointer(
             mPositionHandle, COORDINATES_PER_VERTEX,
             GLES32.GL_FLOAT, false, VERTEX_STRIDE, vertexMBuffer
+        )
+        GLES32.glVertexAttribPointer(
+            mNormalHandle, COORDINATES_PER_VERTEX,
+            GLES32.GL_FLOAT, false, VERTEX_STRIDE, normalMBuffer
         )
         GLES32.glVertexAttribPointer(
             mColorHandle, COLOR_PER_VERTEX,
@@ -973,6 +1070,10 @@ class LogoFrame(private val renderer: OpenGLLogoRenderer) {
             GLES32.GL_FLOAT, false, VERTEX_STRIDE, vertexEBuffer
         )
         GLES32.glVertexAttribPointer(
+            mNormalHandle, COORDINATES_PER_VERTEX,
+            GLES32.GL_FLOAT, false, VERTEX_STRIDE, normalEBuffer
+        )
+        GLES32.glVertexAttribPointer(
             mColorHandle, COLOR_PER_VERTEX,
             GLES32.GL_FLOAT, false, COLOR_STRIDE, colorEBuffer
         )
@@ -989,6 +1090,10 @@ class LogoFrame(private val renderer: OpenGLLogoRenderer) {
         GLES32.glVertexAttribPointer(
             mPositionHandle, COORDINATES_PER_VERTEX,
             GLES32.GL_FLOAT, false, VERTEX_STRIDE, vertexRBuffer
+        )
+        GLES32.glVertexAttribPointer(
+            mNormalHandle, COORDINATES_PER_VERTEX,
+            GLES32.GL_FLOAT, false, VERTEX_STRIDE, normalRBuffer
         )
         GLES32.glVertexAttribPointer(
             mColorHandle, COLOR_PER_VERTEX,
@@ -1009,6 +1114,10 @@ class LogoFrame(private val renderer: OpenGLLogoRenderer) {
             GLES32.GL_FLOAT, false, VERTEX_STRIDE, vertexSphere1Buffer
         )
         GLES32.glVertexAttribPointer(
+            mNormalHandle, COORDINATES_PER_VERTEX,
+            GLES32.GL_FLOAT, false, VERTEX_STRIDE, normalSphere1Buffer
+        )
+        GLES32.glVertexAttribPointer(
             mColorHandle, COLOR_PER_VERTEX,
             GLES32.GL_FLOAT, false, COLOR_STRIDE, colorSphere1Buffer
         )
@@ -1025,6 +1134,10 @@ class LogoFrame(private val renderer: OpenGLLogoRenderer) {
         GLES32.glVertexAttribPointer(
             mPositionHandle, COORDINATES_PER_VERTEX,
             GLES32.GL_FLOAT, false, VERTEX_STRIDE, vertexSphere2Buffer
+        )
+        GLES32.glVertexAttribPointer(
+            mNormalHandle, COORDINATES_PER_VERTEX,
+            GLES32.GL_FLOAT, false, VERTEX_STRIDE, normalSphere2Buffer
         )
         GLES32.glVertexAttribPointer(
             mColorHandle, COLOR_PER_VERTEX,
