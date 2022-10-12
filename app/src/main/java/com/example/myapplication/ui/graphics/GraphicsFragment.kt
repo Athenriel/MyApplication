@@ -34,7 +34,8 @@ class GraphicsFragment : BaseFragment<FragmentGraphicsBinding>(FragmentGraphicsB
             getString(R.string.opengl_half_cone_title),             //13
             getString(R.string.opengl_imperial_title),              //14
             getString(R.string.opengl_logo_title),                  //15
-            getString(R.string.opengl_logo_diffuse_light_title)     //16
+            getString(R.string.opengl_logo_diffuse_light_title),    //16
+            getString(R.string.opengl_pyramid_with_texture_title)   //17
         )
 
         val graphicExampleModelList = mutableListOf<GraphicExampleModel>()
@@ -107,6 +108,9 @@ class GraphicsFragment : BaseFragment<FragmentGraphicsBinding>(FragmentGraphicsB
             }
             16 -> {
                 GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLLogoDiffuseLightFragment()
+            }
+            17 -> {
+                GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLPyramidWithTextureFragment()
             }
             else -> {
                 GraphicsFragmentDirections.actionGraphicsFragmentToPolygonsFragment()

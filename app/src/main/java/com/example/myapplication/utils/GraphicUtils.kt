@@ -1,8 +1,12 @@
 package com.example.myapplication.utils
 
+import android.content.res.Resources
 import android.graphics.*
+import android.opengl.GLES32
+import android.opengl.GLUtils
 import com.example.myapplication.model.ThreeDCoordinatesModel
 import com.example.myapplication.model.ThreeDFloatsModel
+import timber.log.Timber
 import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.sin
@@ -223,7 +227,10 @@ object GraphicUtils {
         return PointF((sumX / input.size), sumY / input.size)
     }
 
-    fun getBezierCurveVertices(z: Float, bezierPointFList: List<PointF>): ArrayList<ThreeDFloatsModel> {
+    fun getBezierCurveVertices(
+        z: Float,
+        bezierPointFList: List<PointF>
+    ): ArrayList<ThreeDFloatsModel> {
         val tValues = listOf(
             0f,
             0.1f,
@@ -261,9 +268,9 @@ object GraphicUtils {
         translateZ: Float
     ) {
         for (i in array.indices step 3) {
-            array[i]+= translateX
-            array[i+1]+= translateY
-            array[i+2]+= translateZ
+            array[i] += translateX
+            array[i + 1] += translateY
+            array[i + 2] += translateZ
         }
     }
 
@@ -781,6 +788,23 @@ object GraphicUtils {
                 paint
             )
         }
+    }
+
+    fun loadOpenGLTextureFromResources(resources: Resources, resourceId: Int): Int {
+        val textureHandle = IntArray(1)
+        GLES32.glGenTextures(1, textureHandle, 0)
+        if (textureHandle[0] != 0) {
+            val options = BitmapFactory.Options()
+            options.inScaled = false
+            val bitmap = BitmapFactory.decodeResource(resources, resourceId, options)
+            GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, textureHandle[0])
+            GLUtils.texImage2D(GLES32.GL_TEXTURE_2D, 0, bitmap, 0)
+            bitmap.recycle()
+        } else {
+            Timber.e("GLES32 Error generating texture handle")
+        }
+
+        return textureHandle[0]
     }
 
     enum class RotationType {
