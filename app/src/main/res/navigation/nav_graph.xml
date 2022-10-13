@@ -203,6 +203,13 @@
             app:exitAnim="@anim/slide_down"
             app:popEnterAnim="@anim/slide_up"
             app:popExitAnim="@anim/slide_down" />
+        <action
+            android:id="@+id/action_GraphicsFragment_to_OpenGLPyramidWithTextureFragment"
+            app:destination="@id/OpenGLPyramidWithTextureFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down"
+            app:popEnterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down" />
     </fragment>
 
     <fragment
@@ -306,5 +313,11 @@
         android:name="com.example.myapplication.ui.graphics.OpenGLLogoDiffuseLightFragment"
         android:label="@string/opengl_logo_diffuse_light_title"
         tools:layout="@layout/fragment_opengl_logo_diffuse_light" />
+
+    <fragment
+        android:id="@+id/OpenGLPyramidWithTextureFragment"
+        android:name="com.example.myapplication.ui.graphics.OpenGLPyramidWithTextureFragment"
+        android:label="@string/opengl_pyramid_with_texture_title"
+        tools:layout="@layout/fragment_opengl_pyramid_with_texture" />
 
 </navigation>
