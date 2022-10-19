@@ -3,7 +3,7 @@ package com.example.myapplication.ui.frame
 import android.content.res.Resources
 import android.opengl.GLES32
 import com.example.myapplication.R
-import com.example.myapplication.ui.renderer.PyramidWithTextureRenderer
+import com.example.myapplication.ui.renderer.PyramidAndCubeBlendRenderer
 import com.example.myapplication.utils.GraphicUtils
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -11,10 +11,10 @@ import java.nio.FloatBuffer
 import java.nio.IntBuffer
 
 /**
- * Created by Athenriel on 10/12/2022
+ * Created by Athenriel on 10/14/2022
  */
-class PyramidWithTextureFrame(
-    private val renderer: PyramidWithTextureRenderer,
+class CubeToBlendFrame(
+    private val renderer: PyramidAndCubeBlendRenderer,
     resources: Resources
 ) {
 
@@ -117,90 +117,98 @@ class PyramidWithTextureFrame(
         private const val TEXTURE_STRIDE = TEXTURE_PER_VERTEX * 4 //bytes per coordinate
     }
 
-    private val pyramidVertex = floatArrayOf(
+    private val cubeVertex = floatArrayOf(
         //front face
-        0f, 1f, 0f, //0
-        -1f, -1f, 1f, //1
-        1f, -1f, 1f, //2
+        -1f, 1f, 1f, //0
+        1f, 1f, 1f, //1
+        -1f, -1f, 1f, //2
+        1f, -1f, 1f, //3
         //back face
-        -1f, -1f, -1f, //3
-        1f, -1f, -1f, //4
-        //center of bottom
-        0f, -1f, 0f //5
+        -1f, 1f, -1f, //4
+        1f, 1f, -1f, //5
+        -1f, -1f, -1f, //6
+        1f, -1f, -1f //7
     )
 
-    private val pyramidTextureCoordinates = floatArrayOf(
+    private val cubeTextureCoordinates = floatArrayOf(
         //front face
-        0.5f, 0.5f, //0
-        0f, 1f, //1
-        1f, 1f, //2
+        0f, 0f, //0
+        1f, 0f, //1
+        0f, 1f, //2
+        1f, 1f, //3
         //back face
-        0f, 0f, //3
-        1f, 0f, //4
-        //center of bottom
-        0.5f, 0.5f //5
+        0f, 0f, //0
+        1f, 0f, //1
+        0f, 1f, //2
+        1f, 1f //3
     )
 
-    private val pyramidIndices = intArrayOf(
+    private val cubeIndices = intArrayOf(
         //front
-        0, 1, 2,
+        0, 1, 3,
+        3, 2, 0,
         //right side
-        0, 2, 4,
+        1, 5, 7,
+        7, 3, 1,
         //back
-        0, 3, 4,
+        5, 4, 6,
+        6, 7, 5,
         //left side
-        0, 3, 1,
+        4, 0, 2,
+        2, 6, 4,
+        //top
+        0, 1, 5,
+        5, 4, 0,
         //bottom
-        1, 2, 5,
-        2, 4, 5,
-        4, 3, 5,
-        3, 1, 5
+        2, 3, 7,
+        7, 6, 2
     )
 
-    private val pyramidColor = floatArrayOf(
+    private val cubeColor = floatArrayOf(
         //front face
-        1f, 0f, 0f, 1f, //0
-        0f, 1f, 0f, 1f, //1
+        0f, 0f, 1f, 1f, //0
+        0f, 0f, 1f, 1f, //1
         0f, 0f, 1f, 1f, //2
+        0f, 0f, 1f, 1f, //3
         //back face
-        1f, 1f, 0f, 1f, //3
-        0f, 1f, 1f, 1f, //4
-        //center of bottom
-        1f, 0f, 1f, 1f //5
+        0f, 0f, 1f, 1f, //4
+        0f, 0f, 1f, 1f, //5
+        0f, 0f, 1f, 1f, //6
+        0f, 0f, 1f, 1f //7
     )
 
     init {
-        //Pyramid
-        indexBuffer = IntBuffer.allocate(pyramidIndices.size)
-        indexBuffer?.put(pyramidIndices)
+        //Cube
+        indexBuffer = IntBuffer.allocate(cubeIndices.size)
+        indexBuffer?.put(cubeIndices)
         indexBuffer?.position(0)
 
         // initialize vertex byte buffer for shape coordinates
         val bb: ByteBuffer =
-            ByteBuffer.allocateDirect(pyramidVertex.size * 4) // (# of coordinate values * 4 bytes per float)
+            ByteBuffer.allocateDirect(cubeVertex.size * 4) // (# of coordinate values * 4 bytes per float)
         bb.order(ByteOrder.nativeOrder())
         vertexBuffer = bb.asFloatBuffer()
-        vertexBuffer?.put(pyramidVertex)
+        vertexBuffer?.put(cubeVertex)
         vertexBuffer?.position(0)
 
         normalBuffer = bb.asFloatBuffer()
-        normalBuffer?.put(pyramidVertex)
+        normalBuffer?.put(cubeVertex)
         normalBuffer?.position(0)
 
         //initialize color byte buffer
         val cb: ByteBuffer =
-            ByteBuffer.allocateDirect(pyramidColor.size * 4) // (# of coordinate values * 4 bytes per float)
+            ByteBuffer.allocateDirect(cubeColor.size * 4) // (# of coordinate values * 4 bytes per float)
         cb.order(ByteOrder.nativeOrder())
         colorBuffer = cb.asFloatBuffer()
-        colorBuffer?.put(pyramidColor)
+        colorBuffer?.put(cubeColor)
         colorBuffer?.position(0)
 
         //initialize texture byte buffer
         val tb: ByteBuffer =
-            ByteBuffer.allocateDirect(pyramidTextureCoordinates.size * 4) // (# of coordinate values * 4 bytes per float)
+            ByteBuffer.allocateDirect(cubeTextureCoordinates.size * 4) // (# of coordinate values * 4 bytes per float)
         tb.order(ByteOrder.nativeOrder())
         textureBuffer = tb.asFloatBuffer()
-        textureBuffer?.put(pyramidTextureCoordinates)
+        textureBuffer?.put(cubeTextureCoordinates)
         textureBuffer?.position(0)
 
         // prepare shaders and OpenGL program
@@ -259,8 +267,8 @@ class PyramidWithTextureFrame(
 
         GLES32.glEnableVertexAttribArray(mTextureCoordinatesHandle)
 
-        lightLocation[0] = 8f
-        lightLocation[1] = 8f
+        lightLocation[0] = 4f
+        lightLocation[1] = 4f
         lightLocation[2] = 0f
 
         diffuseColor[0] = 1f
@@ -268,9 +276,9 @@ class PyramidWithTextureFrame(
         diffuseColor[2] = 1f
         diffuseColor[3] = 1f
 
-        ambientColor[0] = 0.1f
-        ambientColor[1] = 0.1f
-        ambientColor[2] = 0.1f
+        ambientColor[0] = 0.8f
+        ambientColor[1] = 0.8f
+        ambientColor[2] = 0.8f
         ambientColor[3] = 1f
 
         specularColor[0] = 1f
@@ -294,7 +302,7 @@ class PyramidWithTextureFrame(
         GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, mTextureImageHandle)
         GLES32.glUniform1i(mTextureSamplerHandle, 0)
 
-        GLES32.glUniform1i(mUseTextureHandle, 1) // enable texture
+        GLES32.glUniform1i(mUseTextureHandle, 0) // disable texture
 
         GLES32.glUniform3fv(mLightLocationHandle, 1, lightLocation, 0)
         GLES32.glUniform4fv(mDiffuseColorHandle, 1, diffuseColor, 0)
@@ -334,7 +342,7 @@ class PyramidWithTextureFrame(
         )
         // Draw the triangle
         GLES32.glDrawElements(
-            GLES32.GL_TRIANGLES, pyramidIndices.size, GLES32.GL_UNSIGNED_INT, indexBuffer
+            GLES32.GL_TRIANGLES, cubeIndices.size, GLES32.GL_UNSIGNED_INT, indexBuffer
         )
     }
 
