@@ -5,13 +5,12 @@ import android.opengl.GLES32
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
 import com.example.myapplication.interfaces.RenderTouchRotationListener
+import com.example.myapplication.model.FullRotationModel
 import com.example.myapplication.model.ModelMatrixRotationModel
 import com.example.myapplication.model.RotationModel
 import com.example.myapplication.model.TouchRotationModel
-import com.example.myapplication.ui.frame.CubeFrame
 import com.example.myapplication.ui.frame.CubeToBlendFrame
 import com.example.myapplication.ui.frame.PyramidToBlendFrame
-import com.example.myapplication.ui.frame.PyramidWithTextureFrame
 import timber.log.Timber
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
@@ -30,7 +29,7 @@ class PyramidAndCubeBlendRenderer(private val resources: Resources) : GLSurfaceV
     private var mPyramid: PyramidToBlendFrame? = null
     private var mCube: CubeToBlendFrame? = null
     private var zoom = 0f
-    private var rotationModel: RotationModel? = null
+    private var fullRotationModel: FullRotationModel? = null
     private var touchRotationModel: TouchRotationModel? = null
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
@@ -90,9 +89,16 @@ class PyramidAndCubeBlendRenderer(private val resources: Resources) : GLSurfaceV
                 )
             ).rotateMatrix(mModelMatrix)
         } ?: run {
-            rotationModel?.let { rotationModelSafe ->
-                val modelMatrixRotationModel = ModelMatrixRotationModel(rotationModelSafe)
-                modelMatrixRotationModel.rotateMatrix(mModelMatrix)
+            fullRotationModel?.let { rotationModelSafe ->
+                if (rotationModelSafe.rotationX.isValid()) {
+                    ModelMatrixRotationModel(rotationModelSafe.rotationX).rotateMatrix(mModelMatrix)
+                }
+                if (rotationModelSafe.rotationY.isValid()) {
+                    ModelMatrixRotationModel(rotationModelSafe.rotationY).rotateMatrix(mModelMatrix)
+                }
+                if (rotationModelSafe.rotationZ.isValid()) {
+                    ModelMatrixRotationModel(rotationModelSafe.rotationZ).rotateMatrix(mModelMatrix)
+                }
             }
         }
 
@@ -128,8 +134,8 @@ class PyramidAndCubeBlendRenderer(private val resources: Resources) : GLSurfaceV
         return shader
     }
 
-    fun setRotationModel(newRotationModel: RotationModel) {
-        rotationModel = newRotationModel
+    fun setFullRotationModel(newRotationModel: FullRotationModel) {
+        fullRotationModel = newRotationModel
     }
 
     fun setZoom(newZoom: Float) {
