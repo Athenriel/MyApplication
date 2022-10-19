@@ -210,6 +210,13 @@
             app:exitAnim="@anim/slide_down"
             app:popEnterAnim="@anim/slide_up"
             app:popExitAnim="@anim/slide_down" />
+        <action
+            android:id="@+id/action_GraphicsFragment_to_OpenGLBlendFragment"
+            app:destination="@id/OpenGLBlendFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down"
+            app:popEnterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down" />
     </fragment>
 
     <fragment
@@ -319,5 +326,11 @@
         android:name="com.example.myapplication.ui.graphics.OpenGLPyramidWithTextureFragment"
         android:label="@string/opengl_pyramid_with_texture_title"
         tools:layout="@layout/fragment_opengl_pyramid_with_texture" />
+
+    <fragment
+        android:id="@+id/OpenGLBlendFragment"
+        android:name="com.example.myapplication.ui.graphics.OpenGLBlendFragment"
+        android:label="@string/opengl_blend_title"
+        tools:layout="@layout/fragment_opengl_blend" />
 
 </navigation>

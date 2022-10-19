@@ -3,7 +3,7 @@ package com.example.myapplication.ui.frame
 import android.content.res.Resources
 import android.opengl.GLES32
 import com.example.myapplication.R
-import com.example.myapplication.ui.renderer.PyramidWithTextureRenderer
+import com.example.myapplication.ui.renderer.PyramidAndCubeBlendRenderer
 import com.example.myapplication.utils.GraphicUtils
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -11,10 +11,10 @@ import java.nio.FloatBuffer
 import java.nio.IntBuffer
 
 /**
- * Created by Athenriel on 10/12/2022
+ * Created by Athenriel on 10/14/2022
  */
-class PyramidWithTextureFrame(
-    private val renderer: PyramidWithTextureRenderer,
+class PyramidToBlendFrame(
+    private val renderer: PyramidAndCubeBlendRenderer,
     resources: Resources
 ) {
 
@@ -119,7 +119,7 @@ class PyramidWithTextureFrame(
 
     private val pyramidVertex = floatArrayOf(
         //front face
-        0f, 1f, 0f, //0
+        0f, 2f, 0f, //0
         -1f, -1f, 1f, //1
         1f, -1f, 1f, //2
         //back face
@@ -160,13 +160,13 @@ class PyramidWithTextureFrame(
     private val pyramidColor = floatArrayOf(
         //front face
         1f, 0f, 0f, 1f, //0
-        0f, 1f, 0f, 1f, //1
-        0f, 0f, 1f, 1f, //2
+        1f, 0f, 0f, 1f, //1
+        1f, 0f, 0f, 1f, //2
         //back face
-        1f, 1f, 0f, 1f, //3
-        0f, 1f, 1f, 1f, //4
+        1f, 0f, 0f, 1f, //3
+        1f, 0f, 0f, 1f, //4
         //center of bottom
-        1f, 0f, 1f, 1f //5
+        1f, 0f, 0f, 1f //5
     )
 
     init {
@@ -259,8 +259,8 @@ class PyramidWithTextureFrame(
 
         GLES32.glEnableVertexAttribArray(mTextureCoordinatesHandle)
 
-        lightLocation[0] = 8f
-        lightLocation[1] = 8f
+        lightLocation[0] = 4f
+        lightLocation[1] = 4f
         lightLocation[2] = 0f
 
         diffuseColor[0] = 1f
@@ -268,9 +268,9 @@ class PyramidWithTextureFrame(
         diffuseColor[2] = 1f
         diffuseColor[3] = 1f
 
-        ambientColor[0] = 0.1f
-        ambientColor[1] = 0.1f
-        ambientColor[2] = 0.1f
+        ambientColor[0] = 0.8f
+        ambientColor[1] = 0.8f
+        ambientColor[2] = 0.8f
         ambientColor[3] = 1f
 
         specularColor[0] = 1f
@@ -294,7 +294,7 @@ class PyramidWithTextureFrame(
         GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, mTextureImageHandle)
         GLES32.glUniform1i(mTextureSamplerHandle, 0)
 
-        GLES32.glUniform1i(mUseTextureHandle, 1) // enable texture
+        GLES32.glUniform1i(mUseTextureHandle, 0) // disable texture
 
         GLES32.glUniform3fv(mLightLocationHandle, 1, lightLocation, 0)
         GLES32.glUniform4fv(mDiffuseColorHandle, 1, diffuseColor, 0)

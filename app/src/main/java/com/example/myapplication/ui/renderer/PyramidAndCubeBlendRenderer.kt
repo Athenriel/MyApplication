@@ -8,15 +8,18 @@ import com.example.myapplication.interfaces.RenderTouchRotationListener
 import com.example.myapplication.model.ModelMatrixRotationModel
 import com.example.myapplication.model.RotationModel
 import com.example.myapplication.model.TouchRotationModel
+import com.example.myapplication.ui.frame.CubeFrame
+import com.example.myapplication.ui.frame.CubeToBlendFrame
+import com.example.myapplication.ui.frame.PyramidToBlendFrame
 import com.example.myapplication.ui.frame.PyramidWithTextureFrame
 import timber.log.Timber
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 /**
- * Created by Athenriel on 10/12/2022
+ * Created by Athenriel on 10/14/2022
  */
-class PyramidWithTextureRenderer(private val resources: Resources) : GLSurfaceView.Renderer,
+class PyramidAndCubeBlendRenderer(private val resources: Resources) : GLSurfaceView.Renderer,
     RenderTouchRotationListener {
 
     private val mMVPMatrix = FloatArray(16) //model view projection matrix
@@ -24,14 +27,17 @@ class PyramidWithTextureRenderer(private val resources: Resources) : GLSurfaceVi
     private val mViewMatrix = FloatArray(16) //view matrix
     private val mMVMatrix = FloatArray(16) //model view matrix
     private val mModelMatrix = FloatArray(16) //model  matrix
-    private var mPyramid: PyramidWithTextureFrame? = null
+    private var mPyramid: PyramidToBlendFrame? = null
+    private var mCube: CubeToBlendFrame? = null
+    private var zoom = 0f
     private var rotationModel: RotationModel? = null
     private var touchRotationModel: TouchRotationModel? = null
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         // Set the background frame color to black
         GLES32.glClearColor(0.0f, 0.0f, 0.0f, 1.0f)
-        mPyramid = PyramidWithTextureFrame(this, resources)
+        mPyramid = PyramidToBlendFrame(this, resources)
+        mCube = CubeToBlendFrame(this, resources)
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
@@ -64,7 +70,7 @@ class PyramidWithTextureRenderer(private val resources: Resources) : GLSurfaceVi
             0f, 1f, 0.0f
         ) //head is down (set to (0,1,0) to look from the top)
 
-        Matrix.translateM(mModelMatrix, 0, 0.0f, 0.0f, -3f) //move backward for 3 units
+        Matrix.translateM(mModelMatrix, 0, 0.0f, 0.0f, -5f + zoom) //move backward for 5 units
 
         touchRotationModel?.let { touchRotationModelSafe ->
             ModelMatrixRotationModel(
@@ -96,6 +102,12 @@ class PyramidWithTextureRenderer(private val resources: Resources) : GLSurfaceVi
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVMatrix, 0)
 
         mPyramid?.draw(mMVPMatrix)
+
+        //enable blending
+        GLES32.glBlendFunc(GLES32.GL_ONE, GLES32.GL_ONE_MINUS_CONSTANT_ALPHA)
+        GLES32.glBlendEquation(GLES32.GL_FUNC_ADD)
+        GLES32.glEnable(GLES32.GL_BLEND) //enable blending
+        mCube?.draw(mMVPMatrix)
     }
 
     fun checkGlError(operation: String) {
@@ -118,6 +130,10 @@ class PyramidWithTextureRenderer(private val resources: Resources) : GLSurfaceVi
 
     fun setRotationModel(newRotationModel: RotationModel) {
         rotationModel = newRotationModel
+    }
+
+    fun setZoom(newZoom: Float) {
+        zoom = newZoom
     }
 
     override fun setTouchRotationModel(newTouchRotationModel: TouchRotationModel?) {
