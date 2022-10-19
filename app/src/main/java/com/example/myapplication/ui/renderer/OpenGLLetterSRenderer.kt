@@ -31,7 +31,7 @@ class OpenGLLetterSRenderer : GLSurfaceView.Renderer {
         GLES32.glViewport(0, 0, width, height)
         val ratio = width.toFloat() / height
         val left = -ratio
-        Matrix.frustumM(mProjectionMatrix, 0, left, ratio, -1.0f, 1.0f, 1.0f, 8.0f)
+        Matrix.frustumM(mProjectionMatrix, 0, left, ratio, -1.0f, 1.0f, 1.0f, 80.0f)
     }
 
     override fun onDrawFrame(gl: GL10?) {
@@ -58,14 +58,12 @@ class OpenGLLetterSRenderer : GLSurfaceView.Renderer {
 
         Matrix.translateM(mModelMatrix, 0, -3f, 0f, -5f) //move backward for 5 units
 
-        /*
         val mRotationMatrix = FloatArray(16)
-        Matrix.setRotateM(mRotationMatrix, 0, 30f, 0f, 1f, 0f)
+        Matrix.setRotateM(mRotationMatrix, 0, 45f, 0f, 1f, 0f)
         Matrix.multiplyMM(mModelMatrix, 0, mModelMatrix, 0, mRotationMatrix, 0)
         val mRotationMatrix2 = FloatArray(16)
         Matrix.setRotateM(mRotationMatrix2, 0, 30f, 1f, 0f, 0f)
         Matrix.multiplyMM(mModelMatrix, 0, mModelMatrix, 0, mRotationMatrix2, 0)
-        */
 
         // Calculate the projection and view transformation
         //calculate the model view matrix

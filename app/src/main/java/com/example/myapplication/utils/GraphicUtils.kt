@@ -82,8 +82,12 @@ object GraphicUtils {
         return result
     }
 
-    private fun angleToRadians(angle: Float): Float {
+    fun angleToRadians(angle: Float): Float {
         return (angle * Math.PI / 180).toFloat()
+    }
+
+    fun radiansToAngle(radian: Float): Float {
+        return (-180f * radian / Math.PI).toFloat()
     }
 
     fun centerOfPoints(input: List<Point>): Point {
