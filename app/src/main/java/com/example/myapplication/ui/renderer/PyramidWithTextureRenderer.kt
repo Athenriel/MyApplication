@@ -4,6 +4,7 @@ import android.content.res.Resources
 import android.opengl.GLES32
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
+import com.example.myapplication.interfaces.OpenGLRenderer
 import com.example.myapplication.interfaces.RenderTouchRotationListener
 import com.example.myapplication.model.ModelMatrixRotationModel
 import com.example.myapplication.model.RotationModel
@@ -17,7 +18,7 @@ import javax.microedition.khronos.opengles.GL10
  * Created by Athenriel on 10/12/2022
  */
 class PyramidWithTextureRenderer(private val resources: Resources) : GLSurfaceView.Renderer,
-    RenderTouchRotationListener {
+    RenderTouchRotationListener, OpenGLRenderer {
 
     private val mMVPMatrix = FloatArray(16) //model view projection matrix
     private val mProjectionMatrix = FloatArray(16) //projection matrix
@@ -98,14 +99,18 @@ class PyramidWithTextureRenderer(private val resources: Resources) : GLSurfaceVi
         mPyramid?.draw(mMVPMatrix)
     }
 
-    fun checkGlError(operation: String) {
+    fun setRotationModel(newRotationModel: RotationModel) {
+        rotationModel = newRotationModel
+    }
+
+    override fun checkGlError(operation: String) {
         val error = GLES32.glGetError()
         if (error != GLES32.GL_NO_ERROR) {
-            Timber.e("OpenGLTriangleRenderer error %s operation %s", error, operation)
+            Timber.e("PyramidWithTextureRenderer error %s operation %s", error, operation)
         }
     }
 
-    fun loadShader(type: Int, shaderCode: String): Int {
+    override fun loadShader(type: Int, shaderCode: String): Int {
         // create a vertex shader  (GLES32.GL_VERTEX_SHADER) or a fragment shader (GLES32.GL_FRAGMENT_SHADER)
         val shader = GLES32.glCreateShader(type)
         GLES32.glShaderSource(
@@ -114,10 +119,6 @@ class PyramidWithTextureRenderer(private val resources: Resources) : GLSurfaceVi
         ) // add the source code to the shader and compile it
         GLES32.glCompileShader(shader)
         return shader
-    }
-
-    fun setRotationModel(newRotationModel: RotationModel) {
-        rotationModel = newRotationModel
     }
 
     override fun setTouchRotationModel(newTouchRotationModel: TouchRotationModel?) {

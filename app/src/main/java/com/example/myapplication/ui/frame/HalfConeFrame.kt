@@ -1,10 +1,7 @@
 package com.example.myapplication.ui.frame
 
 import android.opengl.GLES32
-import com.example.myapplication.model.ThreeDFloatsModel
-import com.example.myapplication.ui.renderer.OpenGLHalfConeRenderer
-import com.example.myapplication.utils.GraphicUtils
-import java.lang.reflect.Array
+import com.example.myapplication.interfaces.OpenGLRenderer
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
@@ -16,7 +13,7 @@ import kotlin.math.sin
 /**
  * Created by Athenriel on 9/23/2022
  */
-class HalfConeFrame(private val renderer: OpenGLHalfConeRenderer) {
+class HalfConeFrame(private val renderer: OpenGLRenderer) {
 
     private var indexBuffer: IntBuffer? = null
     private var vertexBuffer: FloatBuffer? = null

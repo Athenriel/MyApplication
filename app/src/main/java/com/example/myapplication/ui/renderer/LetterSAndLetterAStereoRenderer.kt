@@ -1,17 +1,16 @@
 package com.example.myapplication.ui.renderer
 
-import android.content.res.Resources
 import android.opengl.GLES32
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
 import com.example.myapplication.interfaces.OpenGLRenderer
 import com.example.myapplication.interfaces.RenderTouchRotationListener
 import com.example.myapplication.model.FullRotationModel
-import com.example.myapplication.model.ModelMatrixRotationModel
 import com.example.myapplication.model.RotationModel
 import com.example.myapplication.model.TouchRotationModel
-import com.example.myapplication.ui.frame.CubeToBlendFrame
-import com.example.myapplication.ui.frame.PyramidToBlendFrame
+import com.example.myapplication.ui.frame.LetterAToStereoFrame
+import com.example.myapplication.ui.frame.LetterSToStereoFrame
+import com.example.myapplication.ui.frame.StereoFrame
 import timber.log.Timber
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
@@ -19,7 +18,7 @@ import javax.microedition.khronos.opengles.GL10
 /**
  * Created by Athenriel on 10/14/2022
  */
-class PyramidAndCubeBlendRenderer(private val resources: Resources) : GLSurfaceView.Renderer,
+class LetterSAndLetterAStereoRenderer() : GLSurfaceView.Renderer,
     OpenGLRenderer, RenderTouchRotationListener {
 
     private val mMVPMatrix = FloatArray(16) //model view projection matrix
@@ -27,8 +26,12 @@ class PyramidAndCubeBlendRenderer(private val resources: Resources) : GLSurfaceV
     private val mViewMatrix = FloatArray(16) //view matrix
     private val mMVMatrix = FloatArray(16) //model view matrix
     private val mModelMatrix = FloatArray(16) //model  matrix
-    private var mPyramid: PyramidToBlendFrame? = null
-    private var mCube: CubeToBlendFrame? = null
+    private var viewWidth = 1
+    private var viewHeight = 1
+    private var mLetterS: LetterSToStereoFrame? = null
+    private var mLetterA: LetterAToStereoFrame? = null
+    private var leftStereoView: StereoFrame? = null
+    private var rightStereoView: StereoFrame? = null
     private var zoom = 0f
     private var fullRotationModel: FullRotationModel? = null
     private var touchRotationModel: TouchRotationModel? = null
@@ -36,16 +39,25 @@ class PyramidAndCubeBlendRenderer(private val resources: Resources) : GLSurfaceV
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         // Set the background frame color to black
         GLES32.glClearColor(0.0f, 0.0f, 0.0f, 1.0f)
-        mPyramid = PyramidToBlendFrame(this, resources)
-        mCube = CubeToBlendFrame(this, resources)
+        mLetterS = LetterSToStereoFrame(this)
+        mLetterA = LetterAToStereoFrame(this)
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
         // Adjust the view based on view window changes, such as screen rotation
         GLES32.glViewport(0, 0, width, height)
-        val ratio = width.toFloat() / height
-        val left = -ratio
-        Matrix.frustumM(mProjectionMatrix, 0, left, ratio, -1.0f, 1.0f, 1.0f, 80.0f)
+        if (width > height) {
+            val planeRatio = (width / height).toFloat()
+            Matrix.orthoM(mProjectionMatrix, 0, -planeRatio, planeRatio, -1f, 1f, -10f, 200f)
+        } else {
+            val planeRatio = (height / width).toFloat()
+            Matrix.orthoM(mProjectionMatrix, 0, -1f, 1f, -planeRatio, planeRatio, -10f, 200f)
+        }
+        viewWidth = width
+        viewHeight = height
+        leftStereoView = StereoFrame(width.toFloat(), height.toFloat(), true, this)
+        rightStereoView = StereoFrame(width.toFloat(), height.toFloat(), false, this)
+        fullRotationModel = FullRotationModel()
     }
 
     override fun onDrawFrame(gl: GL10?) {
@@ -73,28 +85,24 @@ class PyramidAndCubeBlendRenderer(private val resources: Resources) : GLSurfaceV
         Matrix.translateM(mModelMatrix, 0, 0.0f, 0.0f, -5f + zoom) //move backward for 5 units
 
         touchRotationModel?.let { touchRotationModelSafe ->
-            ModelMatrixRotationModel(
-                RotationModel(
-                    touchRotationModelSafe.angleY,
-                    x = false,
-                    y = true,
-                    z = false
-                )
-            ).rotateMatrix(mModelMatrix)
-            ModelMatrixRotationModel(
+            fullRotationModel = FullRotationModel(
                 RotationModel(
                     touchRotationModelSafe.angleX,
                     x = true,
                     y = false,
                     z = false
+                ), RotationModel(
+                    touchRotationModelSafe.angleY,
+                    x = false,
+                    y = true,
+                    z = false
+                ), RotationModel(
+                    0f,
+                    x = false,
+                    y = false,
+                    z = false
                 )
-            ).rotateMatrix(mModelMatrix)
-        } ?: run {
-            fullRotationModel?.let { rotationModelSafe ->
-                ModelMatrixRotationModel(rotationModelSafe.rotationX).rotateMatrix(mModelMatrix)
-                ModelMatrixRotationModel(rotationModelSafe.rotationY).rotateMatrix(mModelMatrix)
-                ModelMatrixRotationModel(rotationModelSafe.rotationZ).rotateMatrix(mModelMatrix)
-            }
+            )
         }
 
         // Calculate the projection and view transformation
@@ -102,17 +110,40 @@ class PyramidAndCubeBlendRenderer(private val resources: Resources) : GLSurfaceV
         Matrix.multiplyMM(mMVMatrix, 0, mViewMatrix, 0, mModelMatrix, 0)
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVMatrix, 0)
 
-        mPyramid?.draw(mMVPMatrix)
+        //draw the frame buffer
+        GLES32.glViewport(0, 0, viewWidth, viewHeight)
+        Matrix.setIdentityM(mModelMatrix, 0) //set the model matrix to an identity matrix
+        leftStereoView?.setZoom(zoom)
+        rightStereoView?.setZoom(zoom)
+        leftStereoView?.let { leftStereoViewSafe ->
+            drawFrameBuffer(leftStereoViewSafe, fullRotationModel)
+        }
+        rightStereoView?.let { rightStereoViewSafe ->
+            drawFrameBuffer(rightStereoViewSafe, fullRotationModel)
+        }
 
-        //enable blending
-        GLES32.glBlendFunc(GLES32.GL_ONE, GLES32.GL_ONE_MINUS_CONSTANT_ALPHA)
-        GLES32.glBlendEquation(GLES32.GL_FUNC_ADD)
-        GLES32.glEnable(GLES32.GL_BLEND) //enable blending
-        mCube?.draw(mMVPMatrix)
+        //draw the framebuffer
+        GLES32.glViewport(0, 0, viewWidth, viewHeight)
+        GLES32.glClear(GLES32.GL_COLOR_BUFFER_BIT or GLES32.GL_DEPTH_BUFFER_BIT)
+        leftStereoView?.draw()
+        rightStereoView?.draw()
     }
 
-    fun setFullRotationModel(newRotationModel: FullRotationModel) {
-        fullRotationModel = newRotationModel
+    private fun drawFrameBuffer(stereoFrame: StereoFrame, fullRotationModel: FullRotationModel?) {
+        GLES32.glBindFramebuffer(GLES32.GL_FRAMEBUFFER, stereoFrame.getStereoFrameBuffer()[0])
+        GLES32.glViewport(
+            0,
+            0,
+            stereoFrame.getStereoViewWidth().toInt(),
+            stereoFrame.getStereoViewHeight().toInt()
+        )
+        GLES32.glClear(GLES32.GL_COLOR_BUFFER_BIT or GLES32.GL_DEPTH_BUFFER_BIT)
+        val pMatrix = stereoFrame.getModelMatrix(fullRotationModel)
+        Matrix.multiplyMM(mMVMatrix, 0, stereoFrame.getStereoViewMatrix(), 0, pMatrix, 0)
+        Matrix.multiplyMM(mMVPMatrix, 0, stereoFrame.getStereoProjectionMatrix(), 0, mMVMatrix, 0)
+        mLetterA?.draw(mMVPMatrix)
+        mLetterS?.draw(mMVPMatrix)
+        GLES32.glBindFramebuffer(GLES32.GL_FRAMEBUFFER, 0) //render onto the screen
     }
 
     fun setZoom(newZoom: Float) {
@@ -122,7 +153,7 @@ class PyramidAndCubeBlendRenderer(private val resources: Resources) : GLSurfaceV
     override fun checkGlError(operation: String) {
         val error = GLES32.glGetError()
         if (error != GLES32.GL_NO_ERROR) {
-            Timber.e("PyramidAndCubeBlendRenderer error %s operation %s", error, operation)
+            Timber.e("LetterSAndLetterAStereoRenderer error %s operation %s", error, operation)
         }
     }
 

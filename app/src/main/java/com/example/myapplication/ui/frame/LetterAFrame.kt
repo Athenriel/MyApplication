@@ -1,7 +1,7 @@
 package com.example.myapplication.ui.frame
 
 import android.opengl.GLES32
-import com.example.myapplication.ui.renderer.OpenGLLetterARenderer
+import com.example.myapplication.interfaces.OpenGLRenderer
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
@@ -10,7 +10,7 @@ import java.nio.IntBuffer
 /**
  * Created by Athenriel on 9/19/2022
  */
-class LetterAFrame(private val renderer: OpenGLLetterARenderer) {
+class LetterAFrame(private val renderer: OpenGLRenderer) {
 
     private var indexBuffer: IntBuffer? = null
     private var vertexBuffer: FloatBuffer? = null

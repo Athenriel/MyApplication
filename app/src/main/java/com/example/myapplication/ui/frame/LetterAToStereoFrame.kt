@@ -6,13 +6,11 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
 import java.nio.IntBuffer
-import kotlin.math.cos
-import kotlin.math.sin
 
 /**
- * Created by Athenriel on 9/13/2022
+ * Created by Athenriel on 9/19/2022
  */
-class PentagonPrismFrame(private val renderer: OpenGLRenderer) {
+class LetterAToStereoFrame(private val renderer: OpenGLRenderer) {
 
     private var indexBuffer: IntBuffer? = null
     private var vertexBuffer: FloatBuffer? = null
@@ -35,6 +33,7 @@ class PentagonPrismFrame(private val renderer: OpenGLRenderer) {
         private const val FRAGMENT_SHADER_CODE = "precision mediump float;" +
                 "varying vec4 vColor;" +
                 "void main() {" +
+                "float depth = 1.0 - gl_FragCoord.z;" + //to show closer surface to be brighter, and further away surface darker
                 "gl_FragColor = vColor;" +
                 "}"
         private const val COORDINATES_PER_VERTEX =
@@ -45,135 +44,94 @@ class PentagonPrismFrame(private val renderer: OpenGLRenderer) {
         private const val COLOR_STRIDE = COLOR_PER_VERTEX * 4 // 4 bytes per vertex
     }
 
-    private val point0X = 0f
-    private val point0Y = 0f
-    private val point1X = 0f
-    private val point1Y = 1f
-    private val point2X = sin(2 * Math.PI / 5).toFloat()
-    private val point2Y = cos(2 * Math.PI / 5).toFloat()
-    private val point3X = sin(4 * Math.PI / 5).toFloat()
-    private val point3Y = -cos(Math.PI / 5).toFloat()
-    private val point4X = -point3X
-    private val point4Y = point3Y
-    private val point5X = -point2X
-    private val point5Y = point2Y
-    private val front = 1f
-    private val back = -1f
-
-    private val pentagonPrismVertices = floatArrayOf(
-        //front face
-        point0X, point0Y, front, //0
-        point1X, point1Y, front, //1
-        point2X, point2Y, front, //2
-        point3X, point3Y, front, //3
-        point4X, point4Y, front, //4
-        point5X, point5Y, front, //5
-        //back face
-        point0X, point0Y, back, //6
-        point1X, point1Y, back, //7
-        point2X, point2Y, back, //8
-        point3X, point3Y, back, //9
-        point4X, point4Y, back, //10
-        point5X, point5Y, back, //11
-        //side 1
-        point1X, point1Y, front, //12
-        point1X, point1Y, back, //13
-        point2X, point2Y, back, //14
-        point2X, point2Y, front, //15
-        //side 2
-        point2X, point2Y, front, //16
-        point2X, point2Y, back, //17
-        point3X, point3Y, back, //18
-        point3X, point3Y, front, //19
-        //side 3
-        point3X, point3Y, front, //20
-        point3X, point3Y, back, //21
-        point4X, point4Y, back, //22
-        point4X, point4Y, front, //23
-        //side 4
-        point4X, point4Y, front, //24
-        point4X, point4Y, back, //25
-        point5X, point5Y, back, //26
-        point5X, point5Y, front, //27
-        //side 5
-        point5X, point5Y, front, //28
-        point5X, point5Y, back, //29
-        point1X, point1Y, back, //30
-        point1X, point1Y, front, //31
+    private val letterAVertices = floatArrayOf(
+        -0.2f, 1f, -0.3f, //0
+        -0.2f, 1f, 0.3f, //1
+        0.2f, 1f, -0.3f, //2
+        0.2f, 1f, 0.3f, //3
+        -1f, -1f, -0.5f, //4
+        -1f, -1f, 0.5f, //5
+        -0.6f, -1f, -0.5f, //6
+        -0.6f, -1f, 0.5f, //7
+        0.6f, -1f, 0.5f, //8
+        0.6f, -1f, -0.5f, //9
+        1f, -1f, 0.5f, //10
+        1f, -1f, -0.5f, //11
+        0f, 0.8f, 0.3f, //12
+        0f, 0.8f, -0.3f, //13
+        0.25f, 0.1f, 0.382f, //14
+        0.25f, 0.1f, -0.382f, //15
+        -0.25f, 0.1f, 0.382f, //16
+        -0.25f, 0.1f, -0.382f, //17
+        0.32f, -0.1f, 0.41f, //18
+        0.32f, -0.1f, -0.41f, //19
+        -0.32f, -0.1f, 0.41f, //20
+        -0.32f, -0.1f, -0.41f //21
     )
 
-    private val pentagonPrismIndices = intArrayOf(
-        0, 1, 2, 0, 2, 3, 0, 3, 4, 0, 4, 5, 0, 5, 1, //front face
-        6, 7, 8, 6, 8, 9, 6, 9, 10, 6, 10, 11, 6, 11, 7, //back face
-        12, 13, 14, 12, 14, 15, //side 1
-        16, 17, 18, 16, 18, 19, //side 2
-        20, 21, 22, 20, 22, 23, //side 3
-        24, 25, 26, 24, 26, 27, //side 4
-        28, 29, 30, 28, 30, 31 //side 5
+    private val letterAIndices = intArrayOf(
+        1, 0, 2, 1, 3, 2, //top
+        4, 0, 5, 5, 1, 0, //left
+        4, 5, 6, 6, 7, 5, //left bottom
+        1, 5, 7, 7, 3, 1, //left front
+        4, 0, 6, 2, 6, 0, //left back
+        3, 10, 11, 11, 3, 2, //right
+        8, 9, 10, 10, 11, 9, //right bottom
+        10, 3, 8, 8, 3, 1, //right front
+        2, 11, 9, 2, 9, 0, //right back
+        6, 12, 13, 7, 6, 12, //left inner
+        9, 8, 12, 9, 13, 12, //right inner
+        14, 15, 16, 15, 17, 16, //inner top
+        19, 18, 20, 20, 21, 19, //inner bottom
+        18, 14, 20, 16, 20, 14, //inner front
+        15, 19, 21, 21, 17, 15 //inner back
     )
 
-    private val pentagonPrismColor = floatArrayOf(
-        //front face
-        0f, 0f, 1f, 1f,
-        0f, 0f, 1f, 1f,
-        0f, 0f, 1f, 1f,
-        0f, 0f, 1f, 1f,
-        0f, 0f, 1f, 1f,
-        0f, 0f, 1f, 1f,
-        //back face
-        1f, 0f, 0f, 1f,
-        1f, 0f, 0f, 1f,
-        1f, 0f, 0f, 1f,
-        1f, 0f, 0f, 1f,
-        1f, 0f, 0f, 1f,
-        1f, 0f, 0f, 1f,
-        //side 1
-        0f, 1f, 0f, 1f,
-        0f, 1f, 0f, 1f,
-        0f, 1f, 0f, 1f,
-        0f, 1f, 0f, 1f,
-        //side 2
-        1f, 1f, 0f, 1f,
-        1f, 1f, 0f, 1f,
-        1f, 1f, 0f, 1f,
-        1f, 1f, 0f, 1f,
-        //side 3
-        0f, 1f, 1f, 1f,
-        0f, 1f, 1f, 1f,
-        0f, 1f, 1f, 1f,
-        0f, 1f, 1f, 1f,
-        //side 4
-        1f, 0f, 1f, 1f,
-        1f, 0f, 1f, 1f,
-        1f, 0f, 1f, 1f,
-        1f, 0f, 1f, 1f,
-        //side 5
-        1f, 1f, 1f, 1f,
-        1f, 1f, 1f, 1f,
-        1f, 1f, 1f, 1f,
-        1f, 1f, 1f, 1f,
+    private val letterAColor = floatArrayOf(
+        0.0f, 0.0f, 1.0f, 1.0f, //0
+        0.0f, 0.0f, 1.0f, 1.0f, //1
+        0.0f, 0.0f, 1.0f, 1.0f, //2
+        0.0f, 0.0f, 1.0f, 1.0f, //3
+        0.0f, 1.0f, 0.0f, 1.0f, //4
+        0.0f, 1.0f, 0.0f, 1.0f, //5
+        0.0f, 1.0f, 0.0f, 1.0f, //6
+        0.0f, 1.0f, 0.0f, 1.0f, //7
+        0.0f, 1.0f, 0.0f, 1.0f, //8
+        0.0f, 1.0f, 0.0f, 1.0f, //9
+        0.0f, 1.0f, 0.0f, 1.0f, //10
+        0.0f, 1.0f, 0.0f, 1.0f, //11
+        0.0f, 0.0f, 1.0f, 1.0f, //12
+        0.0f, 0.0f, 1.0f, 1.0f, //13
+        0.0f, 0.0f, 1.0f, 1.0f, //14
+        0.0f, 0.0f, 1.0f, 1.0f, //15
+        0.0f, 0.0f, 1.0f, 1.0f, //16
+        0.0f, 0.0f, 1.0f, 1.0f, //17
+        0.0f, 1.0f, 0.0f, 1.0f, //18
+        0.0f, 1.0f, 0.0f, 1.0f, //19
+        0.0f, 1.0f, 0.0f, 1.0f, //20
+        0.0f, 1.0f, 0.0f, 1.0f //21
     )
 
     init {
-        indexBuffer = IntBuffer.allocate(pentagonPrismIndices.size)
-        indexBuffer?.put(pentagonPrismIndices)
+        indexBuffer = IntBuffer.allocate(letterAIndices.size)
+        indexBuffer?.put(letterAIndices)
         indexBuffer?.position(0)
 
         // initialize vertex byte buffer for shape coordinates
         val bb: ByteBuffer =
-            ByteBuffer.allocateDirect(pentagonPrismVertices.size * 4) // (# of coordinate values * 4 bytes per float)
+            ByteBuffer.allocateDirect(letterAVertices.size * 4) // (# of coordinate values * 4 bytes per float)
         bb.order(ByteOrder.nativeOrder())
         vertexBuffer = bb.asFloatBuffer()
-        vertexBuffer?.put(pentagonPrismVertices)
+        vertexBuffer?.put(letterAVertices)
         vertexBuffer?.position(0)
-        vertexCount = pentagonPrismVertices.size / COORDINATES_PER_VERTEX
+        vertexCount = letterAVertices.size / COORDINATES_PER_VERTEX
 
         //initialize color byte buffer
         val cb: ByteBuffer =
-            ByteBuffer.allocateDirect(pentagonPrismColor.size * 4) // (# of coordinate values * 4 bytes per float)
+            ByteBuffer.allocateDirect(letterAColor.size * 4) // (# of coordinate values * 4 bytes per float)
         cb.order(ByteOrder.nativeOrder())
         colorBuffer = cb.asFloatBuffer()
-        colorBuffer?.put(pentagonPrismColor)
+        colorBuffer?.put(letterAColor)
         colorBuffer?.position(0)
 
         // prepare shaders and OpenGL program
@@ -205,6 +163,7 @@ class PentagonPrismFrame(private val renderer: OpenGLRenderer) {
     }
 
     fun draw(mvpMatrix: FloatArray) {
+        GLES32.glUseProgram(mProgram)
         // Apply the projection and view transformation
         GLES32.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0)
         renderer.checkGlError("glUniformMatrix4fv")
@@ -220,7 +179,7 @@ class PentagonPrismFrame(private val renderer: OpenGLRenderer) {
         // Draw the triangle
         GLES32.glDrawElements(
             GLES32.GL_TRIANGLES,
-            pentagonPrismIndices.size,
+            letterAIndices.size,
             GLES32.GL_UNSIGNED_INT,
             indexBuffer
         )

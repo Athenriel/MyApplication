@@ -3,7 +3,7 @@ package com.example.myapplication.ui.frame
 import android.content.res.Resources
 import android.opengl.GLES32
 import com.example.myapplication.R
-import com.example.myapplication.ui.renderer.PyramidAndCubeBlendRenderer
+import com.example.myapplication.interfaces.OpenGLRenderer
 import com.example.myapplication.utils.GraphicUtils
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -14,7 +14,7 @@ import java.nio.IntBuffer
  * Created by Athenriel on 10/14/2022
  */
 class CubeToBlendFrame(
-    private val renderer: PyramidAndCubeBlendRenderer,
+    private val renderer: OpenGLRenderer,
     resources: Resources
 ) {
 
