@@ -1,7 +1,7 @@
 package com.example.myapplication.ui.frame
 
 import android.opengl.GLES32
-import com.example.myapplication.ui.renderer.OpenGLLogoRenderer
+import com.example.myapplication.interfaces.OpenGLRenderer
 import com.example.myapplication.utils.GraphicUtils
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -12,7 +12,7 @@ import kotlin.math.abs
 /**
  * Created by Athenriel on 9/30/2022
  */
-class LogoFrame(private val renderer: OpenGLLogoRenderer) {
+class LogoFrame(private val renderer: OpenGLRenderer) {
 
     private var indexMBuffer: IntBuffer? = null
     private var vertexMBuffer: FloatBuffer? = null

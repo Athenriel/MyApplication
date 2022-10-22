@@ -1,7 +1,7 @@
 package com.example.myapplication.ui.frame
 
 import android.opengl.GLES32
-import com.example.myapplication.ui.renderer.OpenGLSphereRenderer
+import com.example.myapplication.interfaces.OpenGLRenderer
 import com.example.myapplication.utils.GraphicUtils
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -12,7 +12,7 @@ import kotlin.math.abs
 /**
  * Created by Athenriel on 9/23/2022
  */
-class SphereFrame(private val renderer: OpenGLSphereRenderer) {
+class SphereFrame(private val renderer: OpenGLRenderer) {
 
     private var index1Buffer: IntBuffer? = null
     private var vertex1Buffer: FloatBuffer? = null

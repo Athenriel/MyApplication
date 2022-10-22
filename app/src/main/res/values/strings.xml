@@ -72,6 +72,7 @@
     <string name="opengl_logo_diffuse_light_title">OpenGL Logo Diffuse Light</string>
     <string name="opengl_pyramid_with_texture_title">OpenGL Pyramid With Texture</string>
     <string name="opengl_blend_title">OpenGL Cube And Pyramid Blend</string>
+    <string name="opengl_stereo_title">OpenGL Stereo View</string>
 
     <!-- errors -->
     <string name="error_title">Error</string>

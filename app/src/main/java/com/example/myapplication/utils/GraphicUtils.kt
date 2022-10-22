@@ -815,4 +815,47 @@ object GraphicUtils {
         CENTER, START, END, TOP, BOTTOM, FRONT, BACK, REFERENCE, NONE
     }
 
+    fun initializeOpenGLTexture(
+        texture: Int,
+        textureId: Int,
+        width: Float,
+        height: Float,
+        pixelFormat: Int,
+        type: Int
+    ) {
+        GLES32.glActiveTexture(texture) //activate the texture
+        GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, textureId) //bind the texture with the ID
+        GLES32.glTexParameteri(
+            GLES32.GL_TEXTURE_2D,
+            GLES32.GL_TEXTURE_MIN_FILTER,
+            GLES32.GL_NEAREST
+        ) //set the min filter
+        GLES32.glTexParameteri(
+            GLES32.GL_TEXTURE_2D,
+            GLES32.GL_TEXTURE_MAG_FILTER,
+            GLES32.GL_NEAREST
+        ) //set the mag filter
+        GLES32.glTexParameteri(
+            GLES32.GL_TEXTURE_2D,
+            GLES32.GL_TEXTURE_WRAP_S,
+            GLES32.GL_CLAMP_TO_EDGE
+        ) //set the wrap for the edge s
+        GLES32.glTexParameteri(
+            GLES32.GL_TEXTURE_2D,
+            GLES32.GL_TEXTURE_WRAP_T,
+            GLES32.GL_CLAMP_TO_EDGE
+        ) //set the wrap for the edge t
+        GLES32.glTexImage2D(
+            GLES32.GL_TEXTURE_2D,
+            0,
+            pixelFormat,
+            width.toInt(),
+            height.toInt(),
+            0,
+            pixelFormat,
+            type,
+            null
+        )
+    }
+
 }

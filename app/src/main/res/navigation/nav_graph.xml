@@ -217,6 +217,13 @@
             app:exitAnim="@anim/slide_down"
             app:popEnterAnim="@anim/slide_up"
             app:popExitAnim="@anim/slide_down" />
+        <action
+            android:id="@+id/action_GraphicsFragment_to_OpenGLStereoFragment"
+            app:destination="@id/OpenGLStereoFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down"
+            app:popEnterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down" />
     </fragment>
 
     <fragment
@@ -332,5 +339,11 @@
         android:name="com.example.myapplication.ui.graphics.OpenGLBlendFragment"
         android:label="@string/opengl_blend_title"
         tools:layout="@layout/fragment_opengl_blend" />
+
+    <fragment
+        android:id="@+id/OpenGLStereoFragment"
+        android:name="com.example.myapplication.ui.graphics.OpenGLStereoFragment"
+        android:label="@string/opengl_stereo_title"
+        tools:layout="@layout/fragment_opengl_stereo" />
 
 </navigation>

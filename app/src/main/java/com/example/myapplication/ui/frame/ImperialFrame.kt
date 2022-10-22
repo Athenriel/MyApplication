@@ -1,7 +1,7 @@
 package com.example.myapplication.ui.frame
 
 import android.opengl.GLES32
-import com.example.myapplication.ui.renderer.OpenGLImperialRenderer
+import com.example.myapplication.interfaces.OpenGLRenderer
 import com.example.myapplication.utils.GraphicUtils
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -11,7 +11,7 @@ import java.nio.IntBuffer
 /**
  * Created by Athenriel on 9/29/2022
  */
-class ImperialFrame(private val renderer: OpenGLImperialRenderer) {
+class ImperialFrame(private val renderer: OpenGLRenderer) {
 
     private var indexFirstIBuffer: IntBuffer? = null
     private var vertexFirstIBuffer: FloatBuffer? = null

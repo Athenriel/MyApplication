@@ -36,7 +36,8 @@ class GraphicsFragment : BaseFragment<FragmentGraphicsBinding>(FragmentGraphicsB
             getString(R.string.opengl_logo_title),                  //15
             getString(R.string.opengl_logo_diffuse_light_title),    //16
             getString(R.string.opengl_pyramid_with_texture_title),  //17
-            getString(R.string.opengl_blend_title)                  //18
+            getString(R.string.opengl_blend_title),                 //18
+            getString(R.string.opengl_stereo_title)                 //19
         )
 
         val graphicExampleModelList = mutableListOf<GraphicExampleModel>()
@@ -115,6 +116,9 @@ class GraphicsFragment : BaseFragment<FragmentGraphicsBinding>(FragmentGraphicsB
             }
             18 -> {
                 GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLBlendFragment()
+            }
+            19 -> {
+                GraphicsFragmentDirections.actionGraphicsFragmentToOpenGLStereoFragment()
             }
             else -> {
                 GraphicsFragmentDirections.actionGraphicsFragmentToPolygonsFragment()

@@ -1,7 +1,7 @@
 package com.example.myapplication.ui.frame
 
 import android.opengl.GLES20
-import com.example.myapplication.ui.renderer.OpenGLEllipseRenderer
+import com.example.myapplication.interfaces.OpenGLRenderer
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
@@ -12,7 +12,7 @@ import kotlin.math.sin
 /**
  * Created by Athenriel on 9/12/2022
  */
-class EllipseFrame(private val renderer: OpenGLEllipseRenderer) {
+class EllipseFrame(private val renderer: OpenGLRenderer) {
 
     private var vertexBuffer: FloatBuffer? = null
     private var mProgram = 0

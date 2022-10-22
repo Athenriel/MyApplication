@@ -1,7 +1,7 @@
 package com.example.myapplication.ui.frame
 
 import android.opengl.GLES32
-import com.example.myapplication.ui.renderer.OpenGLPyramidRenderer
+import com.example.myapplication.interfaces.OpenGLRenderer
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
@@ -9,7 +9,7 @@ import java.nio.FloatBuffer
 /**
  * Created by Athenriel on 9/5/2022
  */
-class PyramidFrame(private val renderer: OpenGLPyramidRenderer) {
+class PyramidFrame(private val renderer: OpenGLRenderer) {
 
     private var vertexBuffer: FloatBuffer? = null
     private var colorBuffer: FloatBuffer? = null
