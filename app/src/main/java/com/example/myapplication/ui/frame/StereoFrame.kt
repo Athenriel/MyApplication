@@ -51,39 +51,37 @@ class StereoFrame(
     private val mViewMatrix = FloatArray(16)
     private val mDisplayProjectionMatrix = FloatArray(16)
 
-    private var depthZ = -5f
     private var aspectRatio = 1f
-    private var nearZ = 1f
-    private var farZ = 80f
-    private var screenZ = -10f
-    private var intraOcularDistance = 0.8f
     private var modelTranslation = 0f
     private var zoom = 0f
 
     companion object {
-        private const val VERTEX_SHADER_CODE =
-            "attribute vec3 aVertexPosition;" +
-                    "uniform mat4 uMVPMatrix;" +
-                    "attribute vec4 aVertexColor;" +
-                    "attribute vec2 aTextureCoordinate; " + //texture coordinate
-                    "varying vec2 vTextureCoordinate;" +
-                    "void main() {" +
-                    "gl_Position = uMVPMatrix * vec4(aVertexPosition, 1.0);" +
-                    "vTextureCoordinate=aTextureCoordinate;" +
-                    "}"
-        private const val FRAGMENT_SHADER_CODE =
-            "precision lowp float;" +
-                    "varying vec2 vTextureCoordinate;" +
-                    "uniform sampler2D uTextureSampler;" + //texture
-                    "void main() {" +
-                    "vec4 fragmentColor = texture2D(uTextureSampler, vec2(vTextureCoordinate.s, vTextureCoordinate.t));" + //load the color texture
-                    "gl_FragColor = vec4(fragmentColor.rgb, fragmentColor.a);" + //the fragment color
-                    "}"
+        private const val VERTEX_SHADER_CODE = "attribute vec3 aVertexPosition;" +
+                "uniform mat4 uMVPMatrix;" +
+                "attribute vec4 aVertexColor;" +
+                "attribute vec2 aTextureCoordinate; " + //texture coordinate
+                "varying vec2 vTextureCoordinate;" +
+                "void main() {" +
+                "gl_Position = uMVPMatrix * vec4(aVertexPosition, 1.0);" +
+                "vTextureCoordinate = aTextureCoordinate;" +
+                "}"
+        private const val FRAGMENT_SHADER_CODE = "precision lowp float;" +
+                "varying vec2 vTextureCoordinate;" +
+                "uniform sampler2D uTextureSampler;" + //texture
+                "void main() {" +
+                "vec4 fragmentColor = texture2D(uTextureSampler, vec2(vTextureCoordinate.s, vTextureCoordinate.t));" + //load the color texture
+                "gl_FragColor = vec4(fragmentColor.rgb, fragmentColor.a);" + //the fragment color
+                "}"
         private const val COORDINATES_PER_VERTEX =
             3 // number of coordinates per vertex in this array
         private const val VERTEX_STRIDE = COORDINATES_PER_VERTEX * 4 // 4 bytes per vertex
         private const val TEXTURE_PER_VERTEX = 2 //number of texture coordinates per vertex
         private const val TEXTURE_STRIDE = TEXTURE_PER_VERTEX * 4 //bytes per coordinate
+        const val Z_DEPTH = -5f
+        const val Z_NEAR = 1f
+        const val Z_FAR = 200f
+        private const val Z_SCREEN = -10f
+        private const val INTRA_OCULAR_DISTANCE = 0.8f
     }
 
     private val plane2DVertex = floatArrayOf(
@@ -108,7 +106,7 @@ class StereoFrame(
     )
 
     private fun getFrustumShift(): Float {
-        return -(intraOcularDistance / 2) * nearZ / screenZ
+        return -(INTRA_OCULAR_DISTANCE / 2) * Z_NEAR / Z_SCREEN
     }
 
     init {
@@ -206,13 +204,13 @@ class StereoFrame(
                 frustumShift + aspectRatio,
                 -1f,
                 1f,
-                nearZ,
-                farZ
+                Z_NEAR,
+                Z_FAR
             )
             Matrix.setLookAtM(
                 frameViewMatrix, 0,
-                -intraOcularDistance / 2f, 0f, 0.1f,
-                0f, 0f, screenZ, //looks at the screen
+                -INTRA_OCULAR_DISTANCE / 2f, 0f, 0.1f,
+                0f, 0f, Z_SCREEN, //looks at the screen
                 0f, 1f, 0f
             ) //head is down (set to (0,1,0) to look from the top)
         } else {
@@ -223,21 +221,21 @@ class StereoFrame(
                 aspectRatio - frustumShift,
                 -1f,
                 1f,
-                nearZ,
-                farZ
+                Z_NEAR,
+                Z_FAR
             )
 
             Matrix.setLookAtM(
                 frameViewMatrix, 0,
-                intraOcularDistance / 2f, 0f, 0.1f,
-                0f, 0f, screenZ, //looks at the screen
+                INTRA_OCULAR_DISTANCE / 2f, 0f, 0.1f,
+                0f, 0f, Z_SCREEN, //looks at the screen
                 0f, 1f, 0f
             ) //head is down (set to (0,1,0) to look from the top)
         }
 
-        modelTranslation = -intraOcularDistance / 2
+        modelTranslation = -INTRA_OCULAR_DISTANCE / 2
         Matrix.setIdentityM(frameModelMatrix, 0) //set the model matrix to an identity matrix
-        Matrix.translateM(frameModelMatrix, 0, modelTranslation, 0f, depthZ + zoom)
+        Matrix.translateM(frameModelMatrix, 0, modelTranslation, 0f, Z_DEPTH + zoom)
         createFrameBuffers()
     }
 
@@ -339,7 +337,7 @@ class StereoFrame(
 
     fun draw() {
         Matrix.setIdentityM(frameModelMatrix, 0) //set the model matrix to an identity matrix
-        Matrix.translateM(frameModelMatrix, 0, modelTranslation, 0f, depthZ + zoom)
+        Matrix.translateM(frameModelMatrix, 0, modelTranslation, 0f, Z_DEPTH + zoom)
 
         GLES32.glUseProgram(mProgram) // Add program to OpenGL environment
         // Apply the projection and view transformation

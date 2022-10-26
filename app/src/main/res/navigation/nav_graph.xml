@@ -224,6 +224,13 @@
             app:exitAnim="@anim/slide_down"
             app:popEnterAnim="@anim/slide_up"
             app:popExitAnim="@anim/slide_down" />
+        <action
+            android:id="@+id/action_GraphicsFragment_to_OpenGLStereoImperialSceneFragment"
+            app:destination="@id/OpenGLStereoImperialSceneFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down"
+            app:popEnterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down" />
     </fragment>
 
     <fragment
@@ -345,5 +352,11 @@
         android:name="com.example.myapplication.ui.graphics.OpenGLStereoFragment"
         android:label="@string/opengl_stereo_title"
         tools:layout="@layout/fragment_opengl_stereo" />
+
+    <fragment
+        android:id="@+id/OpenGLStereoImperialSceneFragment"
+        android:name="com.example.myapplication.ui.graphics.OpenGLStereoImperialSceneFragment"
+        android:label="@string/opengl_stereo_imperial_scene_title"
+        tools:layout="@layout/fragment_opengl_stereo_imperial_scene" />
 
 </navigation>

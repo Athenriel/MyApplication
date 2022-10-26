@@ -83,7 +83,7 @@ data class RotationModel(
         return abs(angle) > ANGLE_MAX
     }
 
-    fun prepareNextRotation() {
+    fun prepareNextRotation(limitOneAxis: Boolean = false) {
         angle = ANGLE_MIN
         when {
             !x && !y && !z -> {
@@ -98,20 +98,43 @@ data class RotationModel(
                 z = true
             }
             !x && !y && z -> {
-                z = false
-                x = true
-                y = true
+                if (limitOneAxis) {
+                    z = false
+                    x = true
+                } else {
+                    z = false
+                    x = true
+                    y = true
+                }
             }
             x && y && !z -> {
-                y = false
-                z = true
+                if (limitOneAxis) {
+                    x = false
+                    y = false
+                    z = true
+                } else {
+                    y = false
+                    z = true
+                }
             }
             x && !y && z -> {
-                x = false
-                y = true
+                if (limitOneAxis) {
+                    x = false
+                    z = false
+                    y = true
+                } else {
+                    x = false
+                    y = true
+                }
             }
             !x && y && z -> {
-                x = true
+                if (limitOneAxis) {
+                    x = true
+                    y = false
+                    z = false
+                } else {
+                    x = true
+                }
             }
             x && y && z -> {
                 x = true

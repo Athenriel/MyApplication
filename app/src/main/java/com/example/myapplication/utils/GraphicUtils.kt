@@ -272,9 +272,11 @@ object GraphicUtils {
         translateZ: Float
     ) {
         for (i in array.indices step 3) {
-            array[i] += translateX
-            array[i + 1] += translateY
-            array[i + 2] += translateZ
+            if (i + 2 < array.size) {
+                array[i] += translateX
+                array[i + 1] += translateY
+                array[i + 2] += translateZ
+            }
         }
     }
 

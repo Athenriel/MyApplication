@@ -73,6 +73,7 @@
     <string name="opengl_pyramid_with_texture_title">OpenGL Pyramid With Texture</string>
     <string name="opengl_blend_title">OpenGL Cube And Pyramid Blend</string>
     <string name="opengl_stereo_title">OpenGL Stereo View</string>
+    <string name="opengl_stereo_imperial_scene_title">OpenGL Stereo Imperial Scene View</string>
 
     <!-- errors -->
     <string name="error_title">Error</string>

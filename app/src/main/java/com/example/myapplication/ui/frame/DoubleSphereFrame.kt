@@ -12,7 +12,7 @@ import kotlin.math.abs
 /**
  * Created by Athenriel on 9/23/2022
  */
-class SphereFrame(private val renderer: OpenGLRenderer) {
+class DoubleSphereFrame(private val renderer: OpenGLRenderer) {
 
     private var index1Buffer: IntBuffer? = null
     private var vertex1Buffer: FloatBuffer? = null
