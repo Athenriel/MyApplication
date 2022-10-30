@@ -15,6 +15,7 @@ import java.nio.IntBuffer
  */
 class PyramidWithTextureFrame(
     private val renderer: OpenGLRenderer,
+    useAlternateTexture: Boolean,
     resources: Resources
 ) {
 
@@ -232,8 +233,11 @@ class PyramidWithTextureFrame(
         GLES32.glEnableVertexAttribArray(mNormalHandle)
         renderer.checkGlError("glVertexAttribPointer")
 
-        mTextureImageHandle =
+        mTextureImageHandle = if (useAlternateTexture) {
             GraphicUtils.loadOpenGLTextureFromResources(resources, R.drawable.crane)
+        } else {
+            GraphicUtils.loadOpenGLTextureFromResources(resources, R.drawable.angkor)
+        }
 
         GLES32.glTexParameteri(
             GLES32.GL_TEXTURE_2D,

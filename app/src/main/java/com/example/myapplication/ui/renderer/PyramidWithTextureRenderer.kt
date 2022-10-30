@@ -32,7 +32,7 @@ class PyramidWithTextureRenderer(private val resources: Resources) : GLSurfaceVi
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         // Set the background frame color to black
         GLES32.glClearColor(0.0f, 0.0f, 0.0f, 1.0f)
-        mPyramid = PyramidWithTextureFrame(this, resources)
+        mPyramid = PyramidWithTextureFrame(this, true, resources)
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {

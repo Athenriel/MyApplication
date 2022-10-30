@@ -4,7 +4,7 @@ import android.opengl.GLES32
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
 import com.example.myapplication.interfaces.OpenGLRenderer
-import com.example.myapplication.ui.frame.SphereFrame
+import com.example.myapplication.ui.frame.DoubleSphereFrame
 import timber.log.Timber
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
@@ -19,12 +19,12 @@ class OpenGLSphereRenderer : GLSurfaceView.Renderer, OpenGLRenderer {
     private val mViewMatrix = FloatArray(16) //view matrix
     private val mMVMatrix = FloatArray(16) //model view matrix
     private val mModelMatrix = FloatArray(16) //model  matrix
-    private var mSphere: SphereFrame? = null
+    private var mSphere: DoubleSphereFrame? = null
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         // Set the background frame color to black
         GLES32.glClearColor(0.0f, 0.0f, 0.0f, 1.0f)
-        mSphere = SphereFrame(this)
+        mSphere = DoubleSphereFrame(this)
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
